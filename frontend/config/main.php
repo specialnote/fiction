@@ -29,14 +29,10 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
+        'cache' => [
+            'class' => 'yii\caching\ApcCache',
+            'keyPrefix' => 'myapp',       // 唯一键前缀
         ],
-        */
     ],
     'params' => $params,
 ];

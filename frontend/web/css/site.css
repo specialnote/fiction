@@ -113,3 +113,7 @@ a.desc:after {
 .p_content {
     text-indent:2em;
 }
+.row{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

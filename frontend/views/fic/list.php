@@ -1,7 +1,10 @@
 <?php
-    $this->title = $fiction['fiction_name'];
+    $this->title = $fiction['fiction_name'] . '-最新目录';
     use yii\helpers\Html;
-    use yii\grid\GridView;
+
+    $sort_list = $list;
+    rsort($sort_list);
+    $frontend_host = Yii::$app->params['frontend_host'];
 ?>
 <div class="row" id="list_header">
     <div class="col-xs-12 col-md-12">
@@ -12,12 +15,15 @@
             <?= Html::encode($fiction['fiction_introduction'])?>
         </p>
     </div>
+    <div class="col-xs-12 col-md-12">
+        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= $list[count($list) - 1]['href'] ?>&text=<?= $list[count($list) - 1]['text']?>"><?= $list[count($list) - 1]['text']?></a></p>
+    </div>
 </div>
 <div class="row">
     <div class="col-xs-12 col-md-12">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default" role="button" id="sold_asc">正序</a>
-            <a class="btn btn-default" role="button">最新章节目录</a>
+            <a class="btn btn-default" role="button" style="width: 5%">全部章节目录</a>
             <a class="btn btn-default" role="button" id="sold_desc">反序</a>
         </div>
     </div>
@@ -31,20 +37,19 @@
     <div class="col-xs-12 col-md-12" id="list_footer">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a href="#list_header" class="btn btn-default" role="button">返回顶部</a>
-            <a href="#" class="btn btn-default" role="button">反序</a>
         </div>
     </div>
 </div>
-
 <script type="text/javascript">
-    var list = <?= json_encode($list) ?>;
-    var reset_list = <?= json_encode($list)?>;
 
-    function getHtml(list){
+    var list = <?= json_encode($list) ?>;
+    var reset_list = <?= json_encode($sort_list)?>;
+
+    function getHtml(list) {
         var html = '';
         if (list.length > 0) {
-            for (var i =0; i < list.length; i++){
-                html = html + '<li class="list-group-item"><a href="' + list[i]['href'] + '">' + list[i]['text'] + '</a></li>';
+            for (var i = 0; i < list.length; i++) {
+                html = html + '<li class="list-group-item"><a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + list[i]['href'] + '&text=' + list[i]['text'] + '">' + list[i]['text'] + '</a></li>';
             }
         } else {
             html = html + '<li class="list-group-item">暂无数据</li>';
@@ -52,13 +57,13 @@
         $('#list_body').html(html);
     }
 
-    $(function(){
+    $(function () {
         getHtml(list);
 
-        $('#sold_asc').click(function(){
+        $('#sold_asc').click(function () {
             getHtml(list);
         });
-        $('#sold_desc').click(function(){
+        $('#sold_desc').click(function () {
             getHtml(reset_list);
         });
     });

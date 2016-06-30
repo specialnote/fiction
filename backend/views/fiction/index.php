@@ -2,7 +2,7 @@
     $this->title = '列表';
 
     use yii\helpers\Html;
-    use backend\models\Fiction;
+    use common\models\Fiction;
 ?>
 <div class="row">
     <table class="table table-striped">

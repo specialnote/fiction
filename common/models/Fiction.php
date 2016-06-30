@@ -1,11 +1,12 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 use Goutte\Client;
 use yii\base\Exception;
 use yii\base\Model;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class Fiction extends Model
 {
@@ -29,21 +30,22 @@ class Fiction extends Model
                         if ($a && count($a) > 0) {
                             $href = $a->eq(0)->attr('href');
                             if ($href) {
-                               if ($fiction['fiction_list_type'] == 'current') {
-                                   $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
-                               } else {
-                                   //todo 其他渠道不同情况处理
-                                   $url = $href;
-                               }
-                               $crawler = $client->request('GET', $url);
-                               if ($crawler) {
-                                   $content = $crawler->filter($fiction['fiction_detail_rule']);
-                                   if ($content && $content->text()) {
-                                       return 20;
-                                   }
-                               }
-                           }
-                           return 10;
+                                if ($fiction['fiction_list_type'] == 'current') {
+                                    $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
+                                } else {
+                                    //todo 其他渠道不同情况处理
+                                    $url = $href;
+                                }
+                                $crawler = $client->request('GET', $url);
+                                if ($crawler) {
+                                    $detail = $crawler->filter($fiction['fiction_detail_rule']);
+                                    $content = $detail->eq(0);
+                                    if ($content && $content->text()) {
+                                        return 20;
+                                    }
+                                }
+                            }
+                            return 10;
                         }
                     }
                 } catch (Exception $e) {
@@ -53,7 +55,14 @@ class Fiction extends Model
         return 0;
     }
 
-    public static function getFictionList($ditch_key, $fiction_key) {
+    /**
+     * 获取小说的上一章、下一章
+     * @param $ditch_key
+     * @param $fiction_key
+     * @return array
+     */
+    public static function getFictionList($ditch_key, $fiction_key)
+    {
         $array = [];
         if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key])) {
             $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key];
@@ -65,7 +74,7 @@ class Fiction extends Model
                         $a = $crawler->filter($fiction['fiction_list_rule']);
                         if ($a && count($a) > 0) {
                             global $array;
-                            $a->each(function($node) use($array, $fiction){
+                            $a->each(function ($node) use ($array, $fiction) {
                                 global $array;
                                 if ($node) {
                                     $href = $node->attr('href');
@@ -83,10 +92,43 @@ class Fiction extends Model
                         }
                     }
                 } catch (Exception $e) {
-                    throw $e;
+                    //todo
                 }
             }
         }
         return $array;
+    }
+
+    /**
+     * 获取指定小说指定章节上上一章、下一章url
+     * @param $dk
+     * @param $fk
+     * @param $url
+     * @return array
+     */
+    public static function getPrevAndNext($dk, $fk, $url) {
+        $cache = Yii::$app->cache;
+        $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
+        if ($list === false) {
+            $list = self::getFictionList($dk, $fk);
+            $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60*60*24);
+        }
+        $urls = ArrayHelper::getColumn($list, 'href');
+        if (in_array($url, $urls)) {
+            $current = array_search($url, $list);
+        } else {
+            $current = false;
+        }
+        if ($current !== false) {
+            return [
+                'prev' => $list[max($current - 1, 0)]['href'],
+                'next' => $list[min(count($list - 1), $current + 1)]['href']
+            ];
+        } else {
+            return [
+                'prev' => false,
+                'next' => false
+            ];
+        }
     }
 }

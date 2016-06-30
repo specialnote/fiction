@@ -1,7 +1,5 @@
 <?php
 return [
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
-    'user.passwordResetTokenExpire' => 3600,
-    'company_name' => '万採之家',
+    'company_name' => '万花筒',
+    'frontend_host' => 'fiction.com/',//前台域名
 ];
