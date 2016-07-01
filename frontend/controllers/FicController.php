@@ -12,12 +12,12 @@ use Yii;
 class FicController extends BaseController
 {
     //小说章节目录页
-    public function actionList($dk, $fk)
+    public function actionList()
     {
+        $dk = $this->get('dk');
+        $fk = $this->get('fk');
         $cache = Yii::$app->cache;
-        $dk = Html::encode($dk);
-        $fk = Html::encode($fk);
-        if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk])) {
+        if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk])) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
             $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
             if ($list === false) {
@@ -36,12 +36,12 @@ class FicController extends BaseController
     }
 
     //小说详情页
-    public function actionDetail($dk, $fk, $url, $text)
+    public function actionDetail()
     {
-        $dk = Html::encode($dk);
-        $fk = Html::encode($fk);
-        $url = Html::encode($url);
-        $text = Html::encode($text);
+        $dk = $this->get('dk');
+        $fk = $this->get('fk');
+        $url = $this->get('url');
+        $text = $this->get('text');
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk]) && !empty($url)) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
             $client = new Client();
