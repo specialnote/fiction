@@ -87,7 +87,7 @@ class Fiction extends Model
                                             $url = $href;
                                         }
                                         $text = $node->text();
-                                        $array[] = ['href' => $url, 'text' => $text];
+                                        $array[] = ['url' => $url, 'text' => $text];
                                     }
                                 });
                             }
@@ -115,7 +115,7 @@ class Fiction extends Model
     public static function getPrevAndNext($dk, $fk, $url)
     {
         $list = self::getFictionList($dk, $fk);
-        $urls = ArrayHelper::getColumn($list, 'href');
+        $urls = ArrayHelper::getColumn($list, 'url');
         if (in_array($url, $urls)) {
             $current = array_search($url, $urls);
         } else {
@@ -123,8 +123,8 @@ class Fiction extends Model
         }
         if ($current !== false) {
             return [
-                'prev' => ($current - 1 >= 0) ? $list[$current - 1]['href'] : false,
-                'next' => ($current + 1 < count($list) - 1) ? $list[$current + 1]['href'] : false
+                'prev' => ($current - 1 >= 0) ? $list[$current - 1]['url'] : false,
+                'next' => ($current + 1 < count($list) - 1) ? $list[$current + 1]['url'] : false
             ];
         } else {
             return [
@@ -144,7 +144,7 @@ class Fiction extends Model
     public static function getFictionTitleAndNum($dk, $fk, $url)
     {
         $list = self::getFictionList($dk, $fk);
-        $urls = ArrayHelper::getColumn($list, 'href');
+        $urls = ArrayHelper::getColumn($list, 'url');
         if (in_array($url, $urls)) {
             $current = array_search($url, $urls);
         } else {

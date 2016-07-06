@@ -16,7 +16,7 @@
         </p>
     </div>
     <div class="col-xs-12 col-md-12">
-        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= $list[count($list) - 1]['href'] ?>&text=<?= $list[count($list) - 1]['text']?>"><?= $list[count($list) - 1]['text']?></a></p>
+        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= $list[count($list) - 1]['url'] ?>&text=<?= $list[count($list) - 1]['text']?>"><?= $list[count($list) - 1]['text']?></a></p>
     </div>
 </div>
 <div class="row">
@@ -50,7 +50,7 @@
         if (list.length > 0) {
             for (var i = 0; i < list.length; i++) {
                 var target = 'f_c_list_' + i;
-                html = html + '<li class="list-group-item" id="' + target + '"><a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + list[i]['href'] + '&text=' + list[i]['text'] + '">' + list[i]['text'] + '</a></li>';
+                html = html + '<li class="list-group-item" id="' + target + '"><a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + list[i]['url'] + '&text=' + list[i]['text'] + '">' + list[i]['text'] + '</a></li>';
             }
         } else {
             html = html + '<li class="list-group-item">暂无数据</li>';
