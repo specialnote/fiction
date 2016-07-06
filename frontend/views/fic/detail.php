@@ -10,6 +10,11 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-xs-12 col-md-12 text-center">
+        <?= $text?>
+    </div>
+</div>
+<div class="row">
     <div class="col-xs-12 col-md-12">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default detail_prev_url" role="button">上一章</a>
@@ -58,12 +63,12 @@
         var prev = $('.detail_prev_url');
         var next = $('.detail_next_url');
         if (data.prev) {
-            prev.attr('href', data.prev);
+            prev.attr('href', '/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + data.prev);
         } else {
             prev.css('background', '#ccc');
         }
         if (data.next) {
-            next.attr('href', data.next);
+            next.attr('href', '/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url='+data.next);
         } else {
             next.css({'background':'#ccc','border':'1px solid #ccc'});
         }

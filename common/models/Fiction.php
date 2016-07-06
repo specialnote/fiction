@@ -67,33 +67,42 @@ class Fiction extends Model
         if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key])) {
             $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key];
             if ($fiction) {
-                $client = new Client();
-                $crawler = $client->request('GET', $fiction['fiction_url']);
-                try {
-                    if ($crawler) {
-                        $a = $crawler->filter($fiction['fiction_list_rule']);
-                        if ($a && count($a) > 0) {
-                            global $array;
-                            $a->each(function ($node) use ($array, $fiction) {
+                $cache = Yii::$app->cache;
+                $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
+                $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
+                if ($list === false || empty($list)) {
+                    $client = new Client();
+                    $crawler = $client->request('GET', $fiction['fiction_url']);
+                    try {
+                        if ($crawler) {
+                            $a = $crawler->filter($fiction['fiction_list_rule']);
+                            if ($a && count($a) > 0) {
                                 global $array;
-                                if ($node) {
-                                    $href = $node->attr('href');
-                                    if ($href) {
-                                        if ($fiction['fiction_list_type'] == 'current') {
-                                            $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
-                                        } else {
-                                            $url = $href;
+                                $a->each(function ($node) use ($array, $fiction) {
+                                    global $array;
+                                    if ($node) {
+                                        $href = $node->attr('href');
+                                        if ($href) {
+                                            if ($fiction['fiction_list_type'] == 'current') {
+                                                $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
+                                            } else {
+                                                $url = $href;
+                                            }
                                         }
+                                        $text = $node->text();
+                                        $array[] = ['href' => $url, 'text' => $text];
                                     }
-                                    $text = $node->text();
-                                    $array[] = ['href' => $url, 'text' => $text];
-                                }
-                            });
+                                });
+                            }
                         }
+                    } catch (Exception $e) {
+                        //todo
                     }
-                } catch (Exception $e) {
-                    //todo
+                    $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $array, 60*60*24);
+                } else {
+                    $array = $list;
                 }
+
             }
         }
         return $array;
@@ -108,12 +117,7 @@ class Fiction extends Model
      */
     public static function getPrevAndNext($dk, $fk, $url)
     {
-        $cache = Yii::$app->cache;
-        $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
-        if ($list === false || empty($list)) {
-            $list = self::getFictionList($dk, $fk);
-            $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60 * 60 * 24);
-        }
+        $list = self::getFictionList($dk, $fk);
         $urls = ArrayHelper::getColumn($list, 'href');
         if (in_array($url, $urls)) {
             $current = array_search($url, $urls);

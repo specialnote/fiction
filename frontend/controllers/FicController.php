@@ -17,14 +17,9 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        $cache = Yii::$app->cache;
         if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk])) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
-            $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
-            if ($list === false || empty($list)) {
-                $list = Fiction::getFictionList($dk, $fk);
-                $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60*60*24);
-            }
+            $list = Fiction::getFictionList($dk, $fk);
             return $this->render('list', [
                 'fiction' => $fiction,
                 'list' => $list,
