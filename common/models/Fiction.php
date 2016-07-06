@@ -134,7 +134,15 @@ class Fiction extends Model
         }
     }
 
-    public static function getFictionTitle($dk, $fk, $url){
+    /**
+     * 获取指定章节的title和序号
+     * @param $dk
+     * @param $fk
+     * @param $url
+     * @return array
+     */
+    public static function getFictionTitleAndNum($dk, $fk, $url)
+    {
         $list = self::getFictionList($dk, $fk);
         $urls = ArrayHelper::getColumn($list, 'href');
         if (in_array($url, $urls)) {
@@ -147,6 +155,6 @@ class Fiction extends Model
         } else {
             $title = '';
         }
-        return $title;
+        return ['title' => $title, 'current' => $current];
     }
 }

@@ -49,7 +49,8 @@
         var html = '';
         if (list.length > 0) {
             for (var i = 0; i < list.length; i++) {
-                html = html + '<li class="list-group-item"><a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + list[i]['href'] + '&text=' + list[i]['text'] + '">' + list[i]['text'] + '</a></li>';
+                var target = 'f_c_list_' + i;
+                html = html + '<li class="list-group-item" id="' + target + '"><a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=' + list[i]['href'] + '&text=' + list[i]['text'] + '">' + list[i]['text'] + '</a></li>';
             }
         } else {
             html = html + '<li class="list-group-item">暂无数据</li>';

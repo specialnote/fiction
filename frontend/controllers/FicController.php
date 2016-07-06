@@ -38,7 +38,9 @@ class FicController extends BaseController
         $fk = $this->get('fk');
         $url = $this->get('url');
         $text = $this->get('text');
-        $text = $text ? $text : Fiction::getFictionTitle($dk, $fk, $url);
+        $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
+        $target = 'f_c_list_' . intval($data['current']);
+        $text = $text ? $text : $data['title'];
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk]) && !empty($url)) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
             $client = new Client();
@@ -49,7 +51,7 @@ class FicController extends BaseController
                     if ($detail) {
                         $content = '';
                         global $content;
-                        $detail->each(function($node) use ($content){
+                        $detail->each(function ($node) use ($content) {
                             global $content;
                             $text = $node->html();
                             $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
@@ -71,6 +73,7 @@ class FicController extends BaseController
                 'dk' => $dk,
                 'fk' => $fk,
                 'url' => $url,
+                'target' => $target,
             ]);
         } else {
             $this->err404('页面未找到');
@@ -78,7 +81,8 @@ class FicController extends BaseController
     }
 
     //ajax获取上一章、下一章
-    public function actionPn(){
+    public function actionPn()
+    {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
         $url = $this->get('url');
