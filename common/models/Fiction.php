@@ -155,6 +155,6 @@ class Fiction extends Model
         } else {
             $title = '';
         }
-        return ['title' => $title, 'current' => $current];
+        return ['title' => $title, 'current' => intval($current)];
     }
 }

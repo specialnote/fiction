@@ -39,7 +39,7 @@ class FicController extends BaseController
         $url = $this->get('url');
         $text = $this->get('text');
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
-        $target = 'f_c_list_' . intval($data['current']);
+        $current =  $data['current'];
         $text = $text ? $text : $data['title'];
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk]) && !empty($url)) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
@@ -73,7 +73,7 @@ class FicController extends BaseController
                 'dk' => $dk,
                 'fk' => $fk,
                 'url' => $url,
-                'target' => $target,
+                'current' => $current,
             ]);
         } else {
             $this->err404('页面未找到');

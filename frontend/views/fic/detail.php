@@ -19,7 +19,7 @@
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default detail_prev_url" role="button">上一章</a>
 
-            <a class="btn btn-default" role="button" style="width: 2%" href="/fic/list?dk=<?= $dk?>&fk=<?= $fk?>#<?= $target?>">章节目录</a>
+            <a class="btn btn-default" role="button" style="width: 2%" href="/fic/list?dk=<?= $dk?>&fk=<?= $fk?>&target=<?= $current?>#<?= 'f_c_list_'.$current?>">章节目录</a>
 
             <a class="btn btn-default detail_next_url" role="button">下一章</a>
         </div>
@@ -34,7 +34,7 @@
     <div class="col-xs-12 col-md-12">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default detail_prev_url" role="button">上一章</a>
-            <a class="btn btn-default" role="button" style="width: 2%" href="/fic/list?dk=<?= $dk?>&fk=<?= $fk?>#<?= $target?>">章节目录</a>
+            <a class="btn btn-default" role="button" style="width: 2%" href="/fic/list?dk=<?= $dk?>&fk=<?= $fk?>&target=<?= $current?>#<?= 'f_c_list_'.$current?>">章节目录</a>
             <a class="btn btn-default detail_next_url" role="button">下一章</a>
         </div>
     </div>
