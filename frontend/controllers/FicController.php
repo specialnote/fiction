@@ -8,6 +8,7 @@ use Goutte\Client;
 use yii\base\Exception;
 use yii\helpers\Html;
 use Yii;
+use yii\web\Response;
 
 class FicController extends BaseController
 {
@@ -20,7 +21,7 @@ class FicController extends BaseController
         if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk])) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
             $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
-            if ($list === false) {
+            if ($list === false || empty($list)) {
                 $list = Fiction::getFictionList($dk, $fk);
                 $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60*60*24);
             }
@@ -56,7 +57,7 @@ class FicController extends BaseController
                             global $content;
                             $text = $node->html();
                             $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
-                            $text = preg_replace('/(<br\s?\/?>){2,}/', '<br/>', $text);
+                            $text = preg_replace('/(<br\s?\/?>){1,}/', '<br/><br/>', $text);
                             $text = strip_tags($text, '<p><div><br>');
                             $content = $content . $text;
                         });
@@ -73,10 +74,24 @@ class FicController extends BaseController
                 'text' => $text,
                 'dk' => $dk,
                 'fk' => $fk,
+                'url' => $url,
             ]);
         } else {
             $this->err404('页面未找到');
         }
+    }
 
+    public function actionPn(){
+        $dk = $this->get('dk');
+        $fk = $this->get('fk');
+        $url = $this->get('url');
+        if (Yii::$app->request->isAjax) {
+            $res = Fiction::getPrevAndNext($dk, $fk, $url);
+            return $res;
+        } else {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $res = Fiction::getPrevAndNext($dk, $fk, $url);
+            return $res;
+        }
     }
 }

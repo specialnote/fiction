@@ -30,9 +30,11 @@ return [
             'errorAction' => 'site/error',
         ],
         'cache' => [
-            'class' => 'yii\caching\ApcCache',
-            'keyPrefix' => 'myapp',       // 唯一键前缀
+            'class' => 'yii\caching\FileCache',
         ],
     ],
     'params' => $params,
+    'as requestBehavior' => [
+        'class' => \common\components\RequestBehavior::class,
+    ],
 ];

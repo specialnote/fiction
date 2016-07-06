@@ -106,23 +106,24 @@ class Fiction extends Model
      * @param $url
      * @return array
      */
-    public static function getPrevAndNext($dk, $fk, $url) {
+    public static function getPrevAndNext($dk, $fk, $url)
+    {
         $cache = Yii::$app->cache;
         $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
-        if ($list === false) {
+        if ($list === false || empty($list)) {
             $list = self::getFictionList($dk, $fk);
-            $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60*60*24);
+            $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $list, 60 * 60 * 24);
         }
         $urls = ArrayHelper::getColumn($list, 'href');
         if (in_array($url, $urls)) {
-            $current = array_search($url, $list);
+            $current = array_search($url, $urls);
         } else {
             $current = false;
         }
         if ($current !== false) {
             return [
-                'prev' => $list[max($current - 1, 0)]['href'],
-                'next' => $list[min(count($list - 1), $current + 1)]['href']
+                'prev' => ($current - 1 >= 0) ? $list[$current - 1]['href'] : false,
+                'next' => ($current + 1 < count($list) - 1) ? $list[$current + 1]['href'] : false
             ];
         } else {
             return [
