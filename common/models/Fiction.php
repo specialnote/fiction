@@ -56,7 +56,7 @@ class Fiction extends Model
     }
 
     /**
-     * 获取小说的上一章、下一章
+     * 获取小说的章节列表
      * @param $ditch_key
      * @param $fiction_key
      * @return array
@@ -68,8 +68,7 @@ class Fiction extends Model
             $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key];
             if ($fiction) {
                 $cache = Yii::$app->cache;
-                $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
-                $list = $cache->get('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list');
+                $list = $cache->get('ditch_' . $ditch_key . '_fiction_list' . $ditch_key . '_fiction_list');
                 if ($list === false || empty($list)) {
                     $client = new Client();
                     $crawler = $client->request('GET', $fiction['fiction_url']);
@@ -82,12 +81,10 @@ class Fiction extends Model
                                     global $array;
                                     if ($node) {
                                         $href = $node->attr('href');
-                                        if ($href) {
-                                            if ($fiction['fiction_list_type'] == 'current') {
-                                                $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
-                                            } else {
-                                                $url = $href;
-                                            }
+                                        if ($fiction['fiction_list_type'] == 'current') {
+                                            $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
+                                        } else {
+                                            $url = $href;
                                         }
                                         $text = $node->text();
                                         $array[] = ['href' => $url, 'text' => $text];
@@ -98,7 +95,7 @@ class Fiction extends Model
                     } catch (Exception $e) {
                         //todo
                     }
-                    $cache->set('ditch_' . $dk . '_fiction_list' . $fk . '_fiction_list', $array, 60*60*24);
+                    $cache->set('ditch_' . $ditch_key . '_fiction_list' . $fiction_key . '_fiction_list', $array, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
                 } else {
                     $array = $list;
                 }
@@ -135,5 +132,21 @@ class Fiction extends Model
                 'next' => false
             ];
         }
+    }
+
+    public static function getFictionTitle($dk, $fk, $url){
+        $list = self::getFictionList($dk, $fk);
+        $urls = ArrayHelper::getColumn($list, 'href');
+        if (in_array($url, $urls)) {
+            $current = array_search($url, $urls);
+        } else {
+            $current = false;
+        }
+        if ($current) {
+            $title = $list[$current]['text'];
+        } else {
+            $title = '';
+        }
+        return $title;
     }
 }

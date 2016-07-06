@@ -38,6 +38,7 @@ class FicController extends BaseController
         $fk = $this->get('fk');
         $url = $this->get('url');
         $text = $this->get('text');
+        $text = $text ? $text : Fiction::getFictionTitle($dk, $fk, $url);
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk]) && !empty($url)) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
             $client = new Client();
@@ -76,6 +77,7 @@ class FicController extends BaseController
         }
     }
 
+    //ajax获取上一章、下一章
     public function actionPn(){
         $dk = $this->get('dk');
         $fk = $this->get('fk');
