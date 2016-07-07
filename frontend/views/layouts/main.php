@@ -28,17 +28,17 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->params['company_name'],
+        'brandLabel' => Yii::$app->params['company_name'].' - '.$this->title,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-      /*  ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],*/
-    ];
+    $dk = 'biquge';
+    $categoryList = \common\models\Category::getDitchCategoryList($dk);
+    foreach($categoryList as $category) {
+        $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
+    }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,

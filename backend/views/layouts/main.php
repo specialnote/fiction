@@ -34,23 +34,9 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link']
-            )
-            . Html::endForm()
-            . '</li>';
+    $categoryList = \common\models\Category::getDitchCategoryList('');
+    foreach($categoryList as $category) {
+        $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
