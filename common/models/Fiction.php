@@ -19,19 +19,19 @@ class Fiction extends Model
      */
     public static function isFictionRunning($ditch_key, $fiction_key)
     {
-        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key])) {
-            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key];
+        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key])) {
+            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key];
             if ($fiction) {
                 $client = new Client();
-                $crawler = $client->request('GET', $fiction['fiction_url']);
+                $crawler = $client->request('GET', $fiction['fiction_caption_url']);
                 try {
                     if ($crawler) {
-                        $a = $crawler->filter($fiction['fiction_list_rule']);
+                        $a = $crawler->filter($fiction['fiction_caption_list_rule']);
                         if ($a && count($a) > 0) {
                             $href = $a->eq(0)->attr('href');
                             if ($href) {
-                                if ($fiction['fiction_list_type'] == 'current') {
-                                    $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
+                                if ($fiction['fiction_caption_list_type'] == 'current') {
+                                    $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
                                 } else {
                                     //todo 其他渠道不同情况处理
                                     $url = $href;
@@ -64,25 +64,25 @@ class Fiction extends Model
     public static function getFictionList($ditch_key, $fiction_key)
     {
         $array = [];
-        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key])) {
-            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_list'][$fiction_key];
+        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key])) {
+            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key];
             if ($fiction) {
                 $cache = Yii::$app->cache;
-                $list = $cache->get('ditch_' . $ditch_key . '_fiction_list' . $ditch_key . '_fiction_list');
+                $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $ditch_key . '_fiction_list');
                 if ($list === false || empty($list)) {
                     $client = new Client();
-                    $crawler = $client->request('GET', $fiction['fiction_url']);
+                    $crawler = $client->request('GET', $fiction['fiction_caption_url']);
                     try {
                         if ($crawler) {
-                            $a = $crawler->filter($fiction['fiction_list_rule']);
+                            $a = $crawler->filter($fiction['fiction_caption_list_rule']);
                             if ($a && count($a) > 0) {
                                 global $array;
                                 $a->each(function ($node) use ($array, $fiction) {
                                     global $array;
                                     if ($node) {
                                         $href = $node->attr('href');
-                                        if ($fiction['fiction_list_type'] == 'current') {
-                                            $url = rtrim($fiction['fiction_url'], '/') . '/' . $href;
+                                        if ($fiction['fiction_caption_list_type'] == 'current') {
+                                            $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
                                         } else {
                                             $url = $href;
                                         }
@@ -95,7 +95,7 @@ class Fiction extends Model
                     } catch (Exception $e) {
                         //todo
                     }
-                    $cache->set('ditch_' . $ditch_key . '_fiction_list' . $fiction_key . '_fiction_list', $array, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
+                    $cache->set('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list', $array, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
                 } else {
                     $array = $list;
                 }

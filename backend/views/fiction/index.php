@@ -14,7 +14,7 @@
             <th>详情状态</th>
         </tr>
         <?php foreach($ditches as $ditch) { ?>
-            <?php foreach($ditch['fiction_list'] as $list) { ?>
+            <?php foreach($ditch['fiction_detail'] as $list) { ?>
                 <tr>
                     <td><?= Html::encode($ditch['ditch_name'])?></td>
                     <td><?= Html::encode($list['fiction_name'])?></td>

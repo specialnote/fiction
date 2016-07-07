@@ -17,8 +17,8 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk])) {
-            $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
+        if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
+            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
             $list = Fiction::getFictionList($dk, $fk);
             return $this->render('list', [
                 'fiction' => $fiction,
@@ -41,8 +41,8 @@ class FicController extends BaseController
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current =  $data['current'];
         $text = $text ? $text : $data['title'];
-        if (isset(Yii::$app->params['ditch'][$dk]['fiction_list'][$fk]) && !empty($url)) {
-            $fiction = Yii::$app->params['ditch'][$dk]['fiction_list'][$fk];
+        if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk]) && !empty($url)) {
+            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
             $client = new Client();
             $crawler = $client->request('GET', $url);
             try {
@@ -90,9 +90,7 @@ class FicController extends BaseController
             $res = Fiction::getPrevAndNext($dk, $fk, $url);
             return $res;
         } else {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            $res = Fiction::getPrevAndNext($dk, $fk, $url);
-            return $res;
+           $this->err404();
         }
     }
 }
