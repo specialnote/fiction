@@ -9,7 +9,7 @@ return [
             'ditch_name' => '笔趣阁',
             'ditch_key' => 'biquge',
             'ditch_domain' => 'http://www.biquge.la',
-            'fiction_detail' => [
+            'fiction_detail' => [//单篇小说列表
                 'wanyuzhiwang' => [
                     'fiction_name' => '万域之王',
                     'fiction_key' => 'wanyuzhiwang',
@@ -24,7 +24,9 @@ return [
                     'fiction_caption_detail_status' => true,
                 ],
             ],
+            'fiction_list' =>[
 
+            ]
         ]
     ],
 ];

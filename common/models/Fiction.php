@@ -19,37 +19,35 @@ class Fiction extends Model
      */
     public static function isFictionRunning($ditch_key, $fiction_key)
     {
-        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key])) {
-            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key];
-            if ($fiction) {
-                $client = new Client();
-                $crawler = $client->request('GET', $fiction['fiction_caption_url']);
-                try {
-                    if ($crawler) {
-                        $a = $crawler->filter($fiction['fiction_caption_list_rule']);
-                        if ($a && count($a) > 0) {
-                            $href = $a->eq(0)->attr('href');
-                            if ($href) {
-                                if ($fiction['fiction_caption_list_type'] == 'current') {
-                                    $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
-                                } else {
-                                    //todo 其他渠道不同情况处理
-                                    $url = $href;
-                                }
-                                $crawler = $client->request('GET', $url);
-                                if ($crawler) {
-                                    $detail = $crawler->filter($fiction['fiction_detail_rule']);
-                                    $content = $detail->eq(0);
-                                    if ($content && $content->text()) {
-                                        return 20;
-                                    }
+        $fiction = self::getFiction($ditch_key, $fiction_key);
+        if ($fiction) {
+            $client = new Client();
+            $crawler = $client->request('GET', $fiction['fiction_caption_url']);
+            try {
+                if ($crawler) {
+                    $a = $crawler->filter($fiction['fiction_caption_list_rule']);
+                    if ($a && count($a) > 0) {
+                        $href = $a->eq(0)->attr('href');
+                        if ($href) {
+                            if ($fiction['fiction_caption_list_type'] == 'current') {
+                                $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
+                            } else {
+                                //todo 其他渠道不同情况处理
+                                $url = $href;
+                            }
+                            $crawler = $client->request('GET', $url);
+                            if ($crawler) {
+                                $detail = $crawler->filter($fiction['fiction_detail_rule']);
+                                $content = $detail->eq(0);
+                                if ($content && $content->text()) {
+                                    return 20;
                                 }
                             }
-                            return 10;
                         }
+                        return 10;
                     }
-                } catch (Exception $e) {
                 }
+            } catch (Exception $e) {
             }
         }
         return 0;
@@ -64,43 +62,41 @@ class Fiction extends Model
     public static function getFictionList($ditch_key, $fiction_key)
     {
         $array = [];
-        if (isset(Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key])) {
-            $fiction = Yii::$app->params['ditch'][$ditch_key]['fiction_detail'][$fiction_key];
-            if ($fiction) {
-                $cache = Yii::$app->cache;
-                $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $ditch_key . '_fiction_list');
-                if ($list === false || empty($list)) {
-                    $client = new Client();
-                    $crawler = $client->request('GET', $fiction['fiction_caption_url']);
-                    try {
-                        if ($crawler) {
-                            $a = $crawler->filter($fiction['fiction_caption_list_rule']);
-                            if ($a && count($a) > 0) {
+        $fiction = self::getFiction($ditch_key, $fiction_key);
+        if ($fiction) {
+            $cache = Yii::$app->cache;
+            $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $ditch_key . '_fiction_list');
+            if ($list === false || empty($list)) {
+                $client = new Client();
+                $crawler = $client->request('GET', $fiction['fiction_caption_url']);
+                try {
+                    if ($crawler) {
+                        $a = $crawler->filter($fiction['fiction_caption_list_rule']);
+                        if ($a && count($a) > 0) {
+                            global $array;
+                            $a->each(function ($node) use ($array, $fiction) {
                                 global $array;
-                                $a->each(function ($node) use ($array, $fiction) {
-                                    global $array;
-                                    if ($node) {
-                                        $href = $node->attr('href');
-                                        if ($fiction['fiction_caption_list_type'] == 'current') {
-                                            $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
-                                        } else {
-                                            $url = $href;
-                                        }
-                                        $text = $node->text();
-                                        $array[] = ['url' => $url, 'text' => $text];
+                                if ($node) {
+                                    $href = $node->attr('href');
+                                    if ($fiction['fiction_caption_list_type'] == 'current') {
+                                        $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
+                                    } else {
+                                        $url = $href;
                                     }
-                                });
-                            }
+                                    $text = $node->text();
+                                    $array[] = ['url' => $url, 'text' => $text];
+                                }
+                            });
                         }
-                    } catch (Exception $e) {
-                        //todo
                     }
-                    $cache->set('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list', $array, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
-                } else {
-                    $array = $list;
+                } catch (Exception $e) {
+                    //todo
                 }
-
+                $cache->set('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list', $array, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
+            } else {
+                $array = $list;
             }
+
         }
         return $array;
     }
@@ -156,5 +152,14 @@ class Fiction extends Model
             $title = '';
         }
         return ['title' => $title, 'current' => intval($current)];
+    }
+
+    public static function getFiction($dk, $fk) {
+        if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
+            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
+        } else {
+            $fiction = null;
+        }
+        return $fiction;
     }
 }

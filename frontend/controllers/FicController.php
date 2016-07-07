@@ -17,8 +17,8 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        if ($dk && $fk && isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
-            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
+        $fiction = Fiction::getFiction($dk, $fk);
+        if ($dk && $fk && $fiction) {
             $list = Fiction::getFictionList($dk, $fk);
             return $this->render('list', [
                 'fiction' => $fiction,
@@ -41,8 +41,8 @@ class FicController extends BaseController
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current =  $data['current'];
         $text = $text ? $text : $data['title'];
-        if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk]) && !empty($url)) {
-            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
+        $fiction = Fiction::getFiction($dk, $fk);
+        if ($fiction) {
             $client = new Client();
             $crawler = $client->request('GET', $url);
             try {
