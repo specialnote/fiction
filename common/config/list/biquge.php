@@ -25,7 +25,60 @@ return [
                 ],
             ],
             'fiction_list' =>[
-
+                'xuanhuan' => [
+                    'category_key' => 'xuanhuan',
+                    'category_name' => '玄幻类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(0)',
+                    'list_rule' => 'ul li a',
+                ],
+                'youxi' => [
+                    'category_key' => 'youxi',
+                    'category_name' => '游戏类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(4)',
+                    'list_rule' => 'ul li a',
+                ],
+                'xiuzhen' => [
+                    'category_key' => 'xiuzhen',
+                    'category_name' => '修真类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(1)',
+                    'list_rule' => 'ul li a',
+                ],
+                'doushi' => [
+                    'category_key' => 'doushi',
+                    'category_name' => '都市类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(2)',
+                    'list_rule' => 'ul li a',
+                ],
+                'lishi' => [
+                    'category_key' => 'lishi',
+                    'category_name' => '历史类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(3)',
+                    'list_rule' => 'ul li a',
+                ],
+                'kehuan' => [
+                    'category_key' => 'kehuan',
+                    'category_name' => '科幻类小说',
+                    'category_url' => [
+                        'http://www.biquge.la/xiaoshuodaquan/',
+                    ],
+                    'category_rule' => '#main .novellist:eq(5)',
+                    'list_rule' => 'ul li a',
+                ],
             ]
         ]
     ],
