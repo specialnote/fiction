@@ -39,7 +39,7 @@ class FicController extends BaseController
         $url = $this->get('url');
         $text = $this->get('text');
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
-        $current =  $data['current'];
+        $current = $data['current'];
         $text = $text ? $text : $data['title'];
         $fiction = Fiction::getFiction($dk, $fk);
         if ($fiction) {
@@ -90,7 +90,7 @@ class FicController extends BaseController
             $res = Fiction::getPrevAndNext($dk, $fk, $url);
             return $res;
         } else {
-           $this->err404();
+            $this->err404();
         }
     }
 }

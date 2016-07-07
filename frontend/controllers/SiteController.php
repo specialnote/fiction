@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Category;
 use Yii;
 use yii\web\Controller;
 
@@ -13,10 +14,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $dk = 'biquge';
+        $categoryList = Category::getDitchCategoryList($dk);
+        return $this->render('index', [
+            'categoryList' => $categoryList,
+            'dk' => $dk,
+        ]);
     }
 
-    public function actionError(){
+    public function actionError()
+    {
         return $this->render('error');
     }
 }

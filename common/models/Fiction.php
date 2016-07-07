@@ -154,7 +154,15 @@ class Fiction extends Model
         return ['title' => $title, 'current' => intval($current)];
     }
 
-    public static function getFiction($dk, $fk) {
+    /**
+     * 返回指定小说的配置
+     * 如果没有找到，则返回null
+     * @param $dk
+     * @param $fk
+     * @return null|array
+     */
+    public static function getFiction($dk, $fk)
+    {
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
         } else {
