@@ -9,7 +9,7 @@
     <div class="row" id="category_list">
         <?php foreach($fictionList as $v) {?>
             <div class="col-xs-6 col-md-6">
-                <a href="/category/detail?dk=<?= $dk?>&ck=<?= $ck?>&url=<?= $v['url']?>"><?= $v['text']?></a>
+                <a href="/category/detail?dk=<?= $dk?>&ck=<?= $ck?>&url=<?= base64_encode($v['url'])?>"><?= $v['text']?></a>
             </div>
         <?php }?>
     </div>
@@ -24,7 +24,7 @@
     <div class="row" id="category_list">
         <?php foreach($fictionList as $v) {?>
             <div class="col-xs-6 col-md-6">
-                <a href="/category/detail?dk=<?= $dk?>&ck=<?= $ck?>&url=<?= $v['url']?>"><?= $v['text']?></a>
+                <a href="/category/detail?dk=<?= $dk?>&ck=<?= $ck?>&url=<?= base64_encode($v['url'])?>"><?= $v['text']?></a>
             </div>
         <?php }?>
     </div>

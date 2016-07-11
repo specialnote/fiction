@@ -36,7 +36,7 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        $url = $this->get('url');
+        $url = base64_decode($this->get('url'));//解密url
         $text = $this->get('text');
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current = $data['current'];
@@ -85,7 +85,7 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        $url = $this->get('url');
+        $url = base64_decode($this->get('url'));
         if (Yii::$app->request->isAjax) {
             $res = Fiction::getPrevAndNext($dk, $fk, $url);
             return $res;

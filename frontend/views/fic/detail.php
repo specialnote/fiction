@@ -59,7 +59,7 @@
     });
 
 
-    $.get('/fic/pn?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= $url?>', function(data){
+    $.get('/fic/pn?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= base64_encode($url)?>', function(data){
         var prev = $('.detail_prev_url');
         var next = $('.detail_next_url');
         if (data.prev) {

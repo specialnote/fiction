@@ -16,7 +16,7 @@
         </p>
     </div>
     <div class="col-xs-12 col-md-12">
-        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= $list[count($list) - 1]['url'] ?>&text=<?= $list[count($list) - 1]['text']?>"><?= $list[count($list) - 1]['text']?></a></p>
+        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?dk=<?= $dk?>&fk=<?= $fk?>&url=<?= urlencode($list[count($list) - 1]['url']) ?>&text=<?= $list[count($list) - 1]['text']?>"><?= $list[count($list) - 1]['text']?></a></p>
     </div>
 </div>
 <div class="row">

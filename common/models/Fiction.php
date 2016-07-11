@@ -79,7 +79,7 @@ class Fiction extends Model
                                 if ($node) {
                                     $href = $node->attr('href');
                                     if ($fiction['fiction_caption_list_type'] == 'current') {
-                                        $url = rtrim($fiction['fiction_caption_url'], '/') . '/' . $href;
+                                        $url = base64_encode(rtrim($fiction['fiction_caption_url'], '/') . '/' . $href);
                                     } else {
                                         $url = $href;
                                     }
@@ -112,8 +112,8 @@ class Fiction extends Model
     {
         $list = self::getFictionList($dk, $fk);
         $urls = ArrayHelper::getColumn($list, 'url');
-        if (in_array($url, $urls)) {
-            $current = array_search($url, $urls);
+        if (in_array(base64_encode($url), $urls)) {
+            $current = array_search(base64_encode($url), $urls);
         } else {
             $current = false;
         }
@@ -141,8 +141,8 @@ class Fiction extends Model
     {
         $list = self::getFictionList($dk, $fk);
         $urls = ArrayHelper::getColumn($list, 'url');
-        if (in_array($url, $urls)) {
-            $current = array_search($url, $urls);
+        if (in_array(base64_encode($url), $urls)) {
+            $current = array_search(base64_encode($url), $urls);
         } else {
             $current = false;
         }
