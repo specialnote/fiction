@@ -24,6 +24,22 @@ return [
                     'fiction_caption_detail_status' => true,
                 ],
             ],
+            'fiction_rule' => [
+                'fiction_caption_list_rule' => [
+                    'fiction_title_rule' => '#maininfo h1',//小说名成规则
+                    'fiction_title_rule_num' => 0,//小说名dom顺序，表示第几个相应的rule
+                    'fiction_author_rule' => '#info p',//小说作者规则
+                    'fiction_author_rule_num' => 0,//作者dom顺序
+                    'fiction_description_rule' => '#intro',//小说描述规则
+                    'fiction_description_rule_num' => 0,//小说描述dom顺序
+                    'fiction_caption_list_rule' => '#list dl dd a',//小说章节列表规则
+                    'fiction_caption_list_example' => 'href="7002428.html"',//小说章节列表url示例
+                    'fiction_caption_list_type' => 'current',//表示列表用a链接做的，链接的地址是相对当前地址，需要拼接
+                ],//指定来源的小说章节列表页面采集规则
+                'fiction_detail_rule' => [
+                    'fiction_detail_rule' => '#content',//销售详情内容
+                ]//指定来源的小说详情页面采集规则
+            ],//指定来源的采集规则
             'category_list' => [
                 'xuanhuan' => [
                     'category_key' => 'xuanhuan',

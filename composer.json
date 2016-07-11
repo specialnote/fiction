@@ -18,7 +18,8 @@
         "yiisoft/yii2": ">=2.0.6",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "fabpot/goutte": "^3.1"
+        "fabpot/goutte": "^3.1",
+        "overtrue/pinyin": "~3.0"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

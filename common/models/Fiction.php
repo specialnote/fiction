@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Goutte\Client;
+use Overtrue\Pinyin\Pinyin;
 use yii\base\Exception;
 use yii\base\Model;
 use Yii;
@@ -65,7 +66,7 @@ class Fiction extends Model
         $fiction = self::getFiction($ditch_key, $fiction_key);
         if ($fiction) {
             $cache = Yii::$app->cache;
-            $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $ditch_key . '_fiction_list');
+            $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list');
             if ($list === false || empty($list)) {
                 $client = new Client();
                 $crawler = $client->request('GET', $fiction['fiction_caption_url']);
@@ -159,15 +160,58 @@ class Fiction extends Model
      * 如果没有找到，则返回null
      * @param $dk
      * @param $fk
+     * @param $url
      * @return null|array
      */
-    public static function getFiction($dk, $fk)
+    public static function getFiction($dk, $fk, $url = null)
     {
+        //直接从配制文件中读取小说配制 1.0
         if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
             $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
+            return $fiction;
         } else {
-            $fiction = null;
+            //根据分类从列表获取url读取小说信息 2.0
+            $cache = Yii::$app->cache;
+            $fiction = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_config');
+            if (!$fiction) {
+                $fiction = self::getFictionByUrl($dk, $url);
+                if ($fiction){
+                    $cache->set(
+                        'ditch_' . $dk . '_fiction_' . $fk . '_config',
+                        $fiction,
+                        Yii::$app->params['fiction_configure_cache_expire_time']
+                    );
+                    return $fiction;
+                }
+            }
         }
-        return $fiction;
+        return [];
+    }
+
+    public static function getFictionByUrl($dk, $url){
+        $ditch = new Ditch($dk);
+        $rule = $ditch->getFictionRule();//获取渠道采集规则
+        $rule = $rule['fiction_caption_list_rule'];
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
+        try {
+            $pinyin = new Pinyin();
+            $title = $crawler->filter($rule['fiction_title_rule'])->eq($rule['fiction_title_rule_num'])->text();
+            $title = trim($title);
+            $fiction_key = implode($pinyin->convert($title));
+            $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
+            $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
+            $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
+            return [
+                'fiction_name' => $title,
+                'fiction_key' => $fiction_key,
+                'fiction_author' => $author,
+                'fiction_introduction' => $description,
+                'fiction_caption_url' => $url,
+            ];
+        }catch (Exception $e){
+
+        }
+        return [];
     }
 }

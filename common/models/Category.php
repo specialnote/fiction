@@ -4,6 +4,7 @@ namespace common\models;
 
 
 use Goutte\Client;
+use Overtrue\Pinyin\Pinyin;
 use yii\base\Exception;
 use yii\base\Model;
 use Yii;
@@ -26,6 +27,7 @@ class Category extends Model
     }
 
     /**
+     * 获取指定分类的小说列表
      * @param $dk
      * @param $ck
      * @return array|mixed
@@ -86,12 +88,80 @@ class Category extends Model
      * @param $ck
      * @return array
      */
-    public static function getDitchCategory($dk, $ck) {
+    public static function getDitchCategory($dk, $ck)
+    {
         if (isset(Yii::$app->params['ditch'][$dk]['category_list'][$ck])) {
             $category = Yii::$app->params['ditch'][$dk]['category_list'][$ck];
         } else {
             $category = [];
         }
         return $category;
+    }
+
+    public static function getFictionCaptionList($url, $dk)
+    {
+        $ditch = new Ditch($dk);
+        $rule = $ditch->getFictionRule();//获取渠道采集规则
+        if ($ditch && $rule) {
+            $rule = $rule['fiction_caption_list_rule'];
+            $client = new Client();
+            if ($url) {
+                $crawler = $client->request('GET', $url);
+                try {
+                    //获取小说信息
+                    $pinyin = new Pinyin();
+                    $title = $crawler->filter($rule['fiction_title_rule'])->eq($rule['fiction_title_rule_num'])->text();
+                    $title = trim($title);
+                    $fiction_key = implode($pinyin->convert($title));
+                    $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
+                    $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
+                    $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
+                    $cache = Yii::$app->cache;
+                    $caption = $cache->get('ditch_'.$dk.'_fiction_'.$fiction_key.'_config');
+                    if (!$caption){
+                        $cache->set(
+                            'ditch_'.$dk.'_fiction_'.$fiction_key.'_config',
+                            [
+                                'fiction_name' => $title,
+                                'fiction_key' => $fiction_key,
+                                'fiction_author' => $author,
+                                'fiction_introduction' => $description,
+                                'fiction_caption_url' => $url,
+                            ],
+                            Yii::$app->params['fiction_configure_cache_expire_time']
+                        );
+                    }
+                    //获取小说章节列表
+                    $list = $cache->get('ditch_' . $dk . '_fiction_detail' . $fiction_key . '_fiction_list');
+                    if ($list === false || empty($list)) {
+                        $list = [];
+                        global $list;
+                        $linkList = $crawler->filter($rule['fiction_caption_list_rule']);
+                        $linkList->each(function($node) use ($list, $rule, $url){
+                            global $list;
+                            if ($node) {
+                                $text = $node->text();
+                                $href = $node->attr('href');
+                                if ($rule['fiction_caption_list_type'] === 'current') {
+                                    $href = rtrim($url, '/') . '/' . $href;
+                                }
+                                $list[] = ['url' => base64_encode($href), 'text' => $text];
+                            }
+                        });
+                    }
+                    $cache->set('ditch_' . $dk . '_fiction_detail' . $fiction_key . '_fiction_list', $list, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
+                    return [
+                        'title' => $title,
+                        'fiction_key' => $fiction_key,
+                        'author' => $author,
+                        'description' => $description,
+                        'list' => $list,
+                    ];
+                } catch (Exception $e) {
+
+                }
+            }
+        }
+        return [];
     }
 }

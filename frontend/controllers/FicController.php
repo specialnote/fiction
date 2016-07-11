@@ -17,7 +17,8 @@ class FicController extends BaseController
     {
         $dk = $this->get('dk');
         $fk = $this->get('fk');
-        $fiction = Fiction::getFiction($dk, $fk);
+        $url = base64_decode($this->get('url'));
+        $fiction = Fiction::getFiction($dk, $fk, $url);
         if ($dk && $fk && $fiction) {
             $list = Fiction::getFictionList($dk, $fk);
             return $this->render('list', [
