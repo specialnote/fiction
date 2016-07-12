@@ -1,5 +1,5 @@
 <?php
-    $this->title = $fiction['fiction_name'] . '-' . $text;
+    $this->title = $fiction['fiction_name'] . '-' . $captionName;
     $this->headline = $fiction['fiction_name'];
 ?>
 <div class="row">

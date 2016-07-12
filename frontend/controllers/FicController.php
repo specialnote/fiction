@@ -34,41 +34,51 @@ class FicController extends BaseController
     public function actionDetail()
     {
         $dk = $this->get('dk');
+        $dk = $dk ?: $this->ditch_key;
         $fk = $this->get('fk');
         $url = base64_decode($this->get('url'));//解密url
-        $text = $this->get('text');
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current = $data['current'];
-        $text = $text ? $text : $data['title'];
+        $captionName =  $data['title'];
         $fiction = Fiction::getFiction($dk, $fk);
         if ($fiction) {
-            $client = new Client();
-            $crawler = $client->request('GET', $url);
-            try {
-                if ($crawler) {
-                    $detail = $crawler->filter($fiction['fiction_detail_rule']);
-                    if ($detail) {
-                        $content = '';
-                        global $content;
-                        $detail->each(function ($node) use ($content) {
+            $cache = Yii::$app->cache;
+            $fictionDetail = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_detail');
+            if (!$fictionDetail){
+                $client = new Client();
+                $crawler = $client->request('GET', $url);
+                $content = '';
+                try {
+                    if ($crawler) {
+                        $detail = $crawler->filter($fiction['fiction_detail_rule']);
+                        if ($detail) {
                             global $content;
-                            $text = $node->html();
-                            $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
-                            $text = preg_replace('/(<br\s?\/?>){1,}/', '<br/><br/>', $text);
-                            $text = strip_tags($text, '<p><div><br>');
-                            $content = $content . $text;
-                        });
+                            $detail->each(function ($node) use ($content) {
+                                global $content;
+                                $text = $node->html();
+                                $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
+                                $text = preg_replace('/(<br\s?\/?>){1,}/', '<br/><br/>', $text);
+                                $text = strip_tags($text, '<p><div><br>');
+                                $content = $content . $text;
+                            });
+                        }
                     }
+                } catch (Exception $e) {
+                    //todo 处理查找失败
                 }
-            } catch (Exception $e) {
-                //todo 处理查找失败
+                if ($content) {
+                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_detail', $content);
+                }
+            } else {
+                $content = $fictionDetail;
             }
+
             $content = isset($content) ? $content : '未获取到指定章节';
 
             return $this->render('detail', [
                 'content' => $content,
                 'fiction' => $fiction,
-                'text' => $text,
+                'captionName' => $captionName,
                 'dk' => $dk,
                 'fk' => $fk,
                 'url' => $url,
