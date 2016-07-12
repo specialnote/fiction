@@ -133,6 +133,8 @@ class Category extends Model
                                 'fiction_author' => $author,
                                 'fiction_introduction' => $description,
                                 'fiction_caption_url' => $url,
+                                'fiction_caption_list_type' => 'current',
+                                'fiction_caption_list_rule' => '#list dl dd a'
                             ],
                             Yii::$app->params['fiction_configure_cache_expire_time']
                         );
@@ -156,6 +158,7 @@ class Category extends Model
                         });
                     }
                     $cache->set('ditch_' . $dk . '_fiction_detail' . $fiction_key . '_fiction_list', $list, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
+                    //返回小说详情
                     return [
                         'title' => $title,
                         'fiction_key' => $fiction_key,
