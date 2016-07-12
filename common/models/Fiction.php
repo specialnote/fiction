@@ -165,29 +165,31 @@ class Fiction extends Model
      */
     public static function getFiction($dk, $fk, $url = null)
     {
-        //直接从配制文件中读取小说配制 1.0
-        if (isset(Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk])) {
-            $fiction = Yii::$app->params['ditch'][$dk]['fiction_detail'][$fk];
-            return $fiction;
-        } else {
-            //根据分类从列表获取url读取小说信息 2.0
-            $cache = Yii::$app->cache;
-            $fiction = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_config');
-            if (!$fiction) {
-                $fiction = self::getFictionByUrl($dk, $url);
-                if ($fiction){
-                    $cache->set(
-                        'ditch_' . $dk . '_fiction_' . $fk . '_config',
-                        $fiction,
-                        Yii::$app->params['fiction_configure_cache_expire_time']
-                    );
-                    return $fiction;
-                }
+        //根据分类从列表获取url读取小说信息 2.0
+        $cache = Yii::$app->cache;
+        $fiction = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_config');
+        if (!$fiction) {
+            $fiction = self::getFictionByUrl($dk, $url);
+            if ($fiction){
+                $cache->set(
+                    'ditch_' . $dk . '_fiction_' . $fk . '_config',
+                    $fiction,
+                    Yii::$app->params['fiction_configure_cache_expire_time']
+                );
+                return $fiction;
             }
+        } else {
+            return $fiction;
         }
         return [];
     }
 
+    /**
+     * 根据小说url获取小说信息并缓存
+     * @param $dk
+     * @param $url
+     * @return array
+     */
     public static function getFictionByUrl($dk, $url){
         $ditch = new Ditch($dk);
         $rule = $ditch->getFictionRule();//获取渠道采集规则
@@ -208,6 +210,8 @@ class Fiction extends Model
                 'fiction_author' => $author,
                 'fiction_introduction' => $description,
                 'fiction_caption_url' => $url,
+                'fiction_caption_list_type' => 'current',
+                'fiction_caption_list_rule' => '#list dl dd a'
             ];
         }catch (Exception $e){
 

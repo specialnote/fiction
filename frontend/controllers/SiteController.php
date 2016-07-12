@@ -3,9 +3,8 @@ namespace frontend\controllers;
 
 use common\models\Category;
 use Yii;
-use yii\web\Controller;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * Displays homepage.
@@ -14,7 +13,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $dk = 'biquge';
+        $dk = $this->ditch_key;
         $categoryList = Category::getDitchCategoryList($dk);
         return $this->render('index', [
             'categoryList' => $categoryList,

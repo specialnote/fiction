@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Category;
 use common\models\Fiction;
 use common\models\Http;
 use Goutte\Client;
@@ -16,19 +17,16 @@ class FicController extends BaseController
     public function actionList()
     {
         $dk = $this->get('dk');
-        $fk = $this->get('fk');
+        $dk = $dk ?: $this->ditch_key;
         $url = base64_decode($this->get('url'));
-        $fiction = Fiction::getFiction($dk, $fk, $url);
-        if ($dk && $fk && $fiction) {
-            $list = Fiction::getFictionList($dk, $fk);
+        $fictionDetail = Category::getFictionDetail($url, $dk);
+        if ($fictionDetail) {
             return $this->render('list', [
-                'fiction' => $fiction,
-                'list' => $list,
+                'fictionDetail' => $fictionDetail,
                 'dk' => $dk,
-                'fk' => $fk,
             ]);
         } else {
-            $this->err404('页面未找到');
+            $this->err404();
         }
     }
 

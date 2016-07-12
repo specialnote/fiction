@@ -3,14 +3,19 @@
 namespace frontend\controllers;
 
 use common\models\Category;
+use common\models\Fiction;
 use yii\data\Pagination;
 use yii\web\Controller;
 
 class CategoryController extends BaseController
 {
+    /**
+     *分类小说列表页
+     */
     public function actionIndex()
     {
         $dk = $this->get('dk');
+        $dk = $dk ?: $this->ditch_key;
         $ck = $this->get('ck');
         $categoryList = Category::getDitchCategoryList($dk);
         $category = Category::getDitchCategory($dk, $ck);
@@ -33,13 +38,8 @@ class CategoryController extends BaseController
     //根据分类小说列表进入指定小说章节页面
     public function actionDetail() {
         $dk = $this->get('dk');
-        $ck = $this->get('ck');
+        $dk = $dk ?: $this->ditch_key;
         $url = base64_decode($this->get('url'));
-        $fiction = Category::getFictionCaptionList($url, $dk);
-        if ($fiction) {
-            return $this->redirect('/fic/list?dk='.$dk.'&fk='.$fiction['fiction_key'].'&url='.base64_encode($url));
-        } else {
-            $this->err404();
-        }
+        return $this->redirect('/fic/list?dk='.$dk.'&url='.base64_encode($url));
     }
 }

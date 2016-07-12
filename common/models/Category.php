@@ -98,7 +98,13 @@ class Category extends Model
         return $category;
     }
 
-    public static function getFictionCaptionList($url, $dk)
+    /**
+     * 根据小说地址，获取小说章节列表，并缓存
+     * @param $url
+     * @param $dk
+     * @return array
+     */
+    public static function getFictionDetail($url, $dk)
     {
         $ditch = new Ditch($dk);
         $rule = $ditch->getFictionRule();//获取渠道采集规则

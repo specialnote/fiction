@@ -1,5 +1,6 @@
 <?php
     $this->title = $fiction['fiction_name'] . '-' . $text;
+    $this->headline = $fiction['fiction_name'];
 ?>
 <div class="row">
     <div class="col-xs-6 col-md-6">

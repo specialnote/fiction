@@ -32,6 +32,9 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'view' => [
+            'class' => \frontend\models\view\FrontendView::class,
+        ],
     ],
     'params' => $params,
     'as requestBehavior' => [

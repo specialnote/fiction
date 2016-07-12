@@ -9,6 +9,8 @@ use yii\web\NotFoundHttpException;
 
 class BaseController extends Controller
 {
+    public $ditch_key = 'ditch';
+
     public function err404($message = ''){
         throw new NotFoundHttpException($message);
     }
