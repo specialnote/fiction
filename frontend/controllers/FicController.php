@@ -67,7 +67,7 @@ class FicController extends BaseController
                     //todo 处理查找失败
                 }
                 if ($content) {
-                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_detail', $content);
+                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_detail', $content, Yii::$app->params['fiction_caption_detail']);
                 }
             } else {
                 $content = $fictionDetail;

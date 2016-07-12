@@ -17,8 +17,9 @@ class CategoryController extends BaseController
         $dk = $this->get('dk');
         $dk = $dk ?: $this->ditch_key;
         $ck = $this->get('ck');
-        $categoryList = Category::getDitchCategoryList($dk);
+        //获取分类配置
         $category = Category::getDitchCategory($dk, $ck);
+        //获取分类的小说列表
         $fictionList = Category::getDitchCategoryFictionList($dk, $ck);
         $pages = new Pagination([
             'totalCount' => count($fictionList),
@@ -31,7 +32,6 @@ class CategoryController extends BaseController
             'ck' => $ck,
             'category' => $category,
             'pages' => $pages,
-            'categoryList' => $categoryList,
         ]);
     }
 
