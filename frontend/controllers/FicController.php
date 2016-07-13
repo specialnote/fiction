@@ -43,14 +43,14 @@ class FicController extends BaseController
         $fiction = Fiction::getFiction($dk, $fk);
         if ($fiction) {
             $cache = Yii::$app->cache;
-            $fictionDetail = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_detail');
+            $fictionDetail = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_url_' . $url . '_detail');
             if (!$fictionDetail){
                 $client = new Client();
                 $crawler = $client->request('GET', $url);
                 $content = '';
                 try {
                     if ($crawler) {
-                        $detail = $crawler->filter($fiction['fiction_detail_rule']);
+                        $detail = $crawler->filter(Yii::$app->params['ditch'][$dk]['fiction_rule']['fiction_detail_rule']['fiction_detail_rule']);
                         if ($detail) {
                             global $content;
                             $detail->each(function ($node) use ($content) {
@@ -67,7 +67,7 @@ class FicController extends BaseController
                     //todo 处理查找失败
                 }
                 if ($content) {
-                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_detail', $content, Yii::$app->params['fiction_caption_detail']);
+                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_url_' . $url . '_detail', $content, Yii::$app->params['fiction_caption_detail']);
                 }
             } else {
                 $content = $fictionDetail;
