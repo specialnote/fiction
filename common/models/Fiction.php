@@ -190,12 +190,13 @@ class Fiction extends Model
      * @param $url
      * @return array
      */
-    public static function getFictionByUrl($ditch_key, $url)
+    public static function getFictionInformationByUrl($ditch_key, $url)
     {
         $cache = Yii::$app->cache;
         $fictionInformation = $cache->get('ditch_' . $ditch_key . '_fiction_' . $url . '_config');
         if (!$fictionInformation) {
-            $fictionInformation = Gather::getFictionInformationByUrl($ditch_key, $url);
+            $fictionInformationCaptionList = Gather::getFictionInformationAndCaptionList($ditch_key, $url);
+            $fictionInformation = $fictionInformationCaptionList['fictionInformation'];
             $cache->set(
                 'ditch_' . $ditch_key . '_fiction_' . $fictionInformation['fiction_key'] . '_config', $fictionInformation, Yii::$app->params['fiction_configure_cache_expire_time']
             );

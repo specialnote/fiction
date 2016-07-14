@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Category;
 use common\models\Fiction;
+use yii\base\Exception;
 use yii\data\Pagination;
 use yii\web\Controller;
 
