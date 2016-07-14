@@ -36,7 +36,12 @@ class Config
         }
     }
 
-    //获取指定渠道或者全部渠道的配置信息
+    /**
+     * 获取指定渠道或者全部渠道的配置信息【单个渠道信息返回处理之后的一维数组】
+     * @param string $ditch_key
+     * @return array
+     * @throws \Exception
+     */
     public function getInformation($ditch_key = '')
     {
         $ditch = $this->getConfig($ditch_key);
@@ -66,14 +71,7 @@ class Config
     //获取指定渠道的分类列表
     public function getDitchCategoryList($ditch_key)
     {
-        return [];
+        $config = $this->getConfig($ditch_key);
+        return $config['category_list'];
     }
-
-    //获取指定渠道的采集规则
-    public function getDitchGatherRule($ditch_key)
-    {
-        return [];
-    }
-
-
 }

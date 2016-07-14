@@ -22,7 +22,7 @@ use yii\db\ActiveRecord;
  * @property integer $descriptionNum
  * @property string $captionRule
  * @property string $detailRule
- * @property integer $captionLinkType 章节列表链接类型。1表示current，是相对小说页面的相对地址；2表示home,即相对于渠道主页的地址
+ * @property string $captionLinkType 章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
  */
 class Ditch extends ActiveRecord
 {
@@ -40,11 +40,11 @@ class Ditch extends ActiveRecord
     public function rules()
     {
         return [
-            [['type', 'status', 'titleNum', 'authorNum', 'descriptionNum', 'captionLinkType'], 'integer'],
+            [['type', 'status', 'titleNum', 'authorNum', 'descriptionNum'], 'integer'],
             [['url'], 'string', 'max' => 100],
             [['name'], 'string', 'max' => 50],
             [['ditch_key'], 'string', 'max' => 80],
-            [['titleRule', 'authorRule', 'descriptionRule', 'captionRule', 'detailRule'], 'string', 'max' => 30],
+            [['titleRule', 'authorRule', 'descriptionRule', 'captionRule', 'detailRule', 'captionLinkType'], 'string', 'max' => 30],
         ];
     }
 
@@ -68,7 +68,7 @@ class Ditch extends ActiveRecord
             'descriptionNum' => 'Description Num',
             'captionRule' => 'Caption Rule',
             'detailRule' => 'Detail Rule',
-            'captionLinkType' => 'Caption Link Type',//章节列表链接类型。1表示current，是相对小说页面的相对地址；2表示home,即相对于渠道主页的地址
+            'captionLinkType' => 'Caption Link Type',//章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
         ];
     }
 
