@@ -13,29 +13,45 @@ class Category extends Model
 {
     /**
      * 获取指定渠道的分类列表 或者 所有渠道的分类
-     * @param $dk
+     * @param $ditch_key
      * @return array
      */
-    public static function getDitchCategoryList($dk = '')
+    public static function getDitchCategoryList($ditch_key = '')
     {
         $ditch = Yii::$app->params['ditch'];
-        if (!$dk) {
-            $dks = array_keys($ditch);
-            if (count($dks) > 0) {
+        if (!$ditch_key) {
+            $ditch_keys = array_keys($ditch);
+            if (count($ditch_keys) > 0) {
                 $category = [];
-                foreach ($dks as $dk) {
-                    if (isset($ditch[$dk]['category_list'])) {
-                        $category = array_merge($category, $ditch[$dk]['category_list']);
+                foreach ($ditch_keys as $ditch_key) {
+                    if (isset($ditch[$ditch_key]['category_list'])) {
+                        $category = array_merge($category, $ditch[$ditch_key]['category_list']);
                     }
                 }
                 return $category;
             }
         } else {
-            if (isset($ditch[$dk]['category_list'])) {
-                return $ditch[$dk]['category_list'];
+            if (isset($ditch[$ditch_key]['category_list'])) {
+                return $ditch[$ditch_key]['category_list'];
             }
         }
         return [];
+    }
+
+    /**
+     * 获取指定渠道指定分类的配置信息
+     * @param $ditch_key
+     * @param $ck
+     * @return array
+     */
+    public static function getDitchCategory($ditch_key, $ck)
+    {
+        if (isset(Yii::$app->params['ditch'][$ditch_key]['category_list'][$ck])) {
+            $category = Yii::$app->params['ditch'][$ditch_key]['category_list'][$ck];
+        } else {
+            $category = [];
+        }
+        return $category;
     }
 
     /**
@@ -58,94 +74,41 @@ class Category extends Model
     }
 
     /**
-     * 获取指定渠道指定分类的配置信息
-     * @param $dk
-     * @param $ck
-     * @return array
-     */
-    public static function getDitchCategory($dk, $ck)
-    {
-        if (isset(Yii::$app->params['ditch'][$dk]['category_list'][$ck])) {
-            $category = Yii::$app->params['ditch'][$dk]['category_list'][$ck];
-        } else {
-            $category = [];
-        }
-        return $category;
-    }
-
-    /**
      * 根据小说地址，获取小说章节列表，并缓存
      * @param $url
-     * @param $dk
+     * @param $ditch_key
      * @return array
+     * @throws Exception
      */
-    public static function getFictionDetail($url, $dk)
+    public static function getFictionDetail($url, $ditch_key)
     {
-        $ditch = new Ditch($dk);
-        $rule = $ditch->getFictionRule();//获取渠道采集规则
-        if ($ditch && $rule) {
-            $rule = $rule['fiction_caption_list_rule'];
-            $client = new Client();
-            if ($url) {
-                $crawler = $client->request('GET', $url);
-                try {
-                    //获取小说信息
-                    $pinyin = new Pinyin();
-                    $title = $crawler->filter($rule['fiction_title_rule'])->eq($rule['fiction_title_rule_num'])->text();
-                    $title = trim($title);
-                    $fiction_key = implode($pinyin->convert($title));
-                    $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
-                    $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
-                    $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
-                    $cache = Yii::$app->cache;
-                    $caption = $cache->get('ditch_' . $dk . '_fiction_' . $fiction_key . '_config');
-                    if (!$caption) {
-                        $cache->set(
-                            'ditch_' . $dk . '_fiction_' . $fiction_key . '_config',
-                            [
-                                'fiction_name' => $title,
-                                'fiction_key' => $fiction_key,
-                                'fiction_author' => $author,
-                                'fiction_introduction' => $description,
-                                'fiction_caption_url' => $url,
-                                'fiction_caption_list_type' => 'current',
-                                'fiction_caption_list_rule' => '#list dl dd a'
-                            ],
-                            Yii::$app->params['fiction_configure_cache_expire_time']
-                        );
-                    }
-                    //获取小说章节列表
-                    $list = $cache->get('ditch_' . $dk . '_fiction_detail' . $fiction_key . '_fiction_list');
-                    if ($list === false || empty($list)) {
-                        $list = [];
-                        global $list;
-                        $linkList = $crawler->filter($rule['fiction_caption_list_rule']);
-                        $linkList->each(function ($node) use ($list, $rule, $url) {
-                            global $list;
-                            if ($node) {
-                                $text = $node->text();
-                                $href = $node->attr('href');
-                                if ($rule['fiction_caption_list_type'] === 'current') {
-                                    $href = rtrim($url, '/') . '/' . $href;
-                                }
-                                $list[] = ['url' => base64_encode($href), 'text' => $text];
-                            }
-                        });
-                    }
-                    $cache->set('ditch_' . $dk . '_fiction_detail' . $fiction_key . '_fiction_list', $list, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
-                    //返回小说详情
-                    return [
-                        'title' => $title,
-                        'fiction_key' => $fiction_key,
-                        'author' => $author,
-                        'description' => $description,
-                        'list' => $list,
-                    ];
-                } catch (Exception $e) {
-
-                }
-            }
+        $fictionInformationAndCaptionList = Gather::getFictionInformationAndCaptionList($url, $ditch_key);
+        $fiction_information = $fictionInformationAndCaptionList['fiction_information'];
+        $fiction_caption_list = $fictionInformationAndCaptionList['fiction_caption_list'];
+        if (!isset($fiction_information['fiction_key'])){
+            throw new Exception;
         }
-        return [];
+        $fiction_key = $fiction_information['fiction_key'];
+        $cache = Yii::$app->cache;
+        //缓存小说信息
+        $captionConfig = $cache->get('ditch_' . $ditch_key . '_fiction_' . $fiction_key . '_config');
+        if (!$captionConfig) {
+            $cache->set(
+                'ditch_' . $ditch_key . '_fiction_' . $fiction_key . '_config',$fiction_information ,Yii::$app->params['fiction_configure_cache_expire_time']
+            );
+        }
+        //缓存小说章节列表
+        $list = $cache->get('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list');
+        if (!$list){
+            $cache->set('ditch_' . $ditch_key . '_fiction_detail' . $fiction_key . '_fiction_list', $list, Yii::$app->params['fiction_chapter_list_cache_expire_time']);
+        }
+        //返回小说详情
+        return [
+            'title' => $fiction_information['fiction_name'],
+            'fiction_key' => $fiction_key,
+            'author' =>  $fiction_information['fiction_author'],
+            'description' => $fiction_information['fiction_introduction'],
+            'list' => $fiction_caption_list,
+        ];
     }
 }

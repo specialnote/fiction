@@ -37,4 +37,16 @@ class Ditch
             return [];
         }
     }
+    /**
+     * 获取指定渠道的小说章节列表规则采集规则
+     * @return array
+     */
+    public function getFictionCaptionListRule()
+    {
+        if (isset(\Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_caption_list_rule'])) {
+            return \Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_caption_list_rule'];
+        } else {
+            return [];
+        }
+    }
 }
