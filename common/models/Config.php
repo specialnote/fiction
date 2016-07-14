@@ -45,7 +45,7 @@ class Config
     public function getInformation($ditch_key = '')
     {
         $ditch = $this->getConfig($ditch_key);
-        if (!$ditch_key) {
+        if ($ditch_key) {
             return array_merge(
                 [
                     'ditch_name' => $ditch['ditch_name'],
