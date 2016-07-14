@@ -34,7 +34,7 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $categoryList = \common\models\Category::getDitchCategoryList('');
+    $categoryList = \common\models\Category::getDitchCategoryList();
     foreach($categoryList as $category) {
         $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
     }

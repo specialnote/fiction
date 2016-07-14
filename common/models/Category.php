@@ -12,18 +12,30 @@ use Yii;
 class Category extends Model
 {
     /**
-     * 获取指定渠道的分类列表
+     * 获取指定渠道的分类列表 或者 所有渠道的分类
      * @param $dk
      * @return array
      */
-    public static function getDitchCategoryList($dk)
+    public static function getDitchCategoryList($dk = '')
     {
-        if (isset(Yii::$app->params['ditch'][$dk]['category_list'])) {
-            $category = Yii::$app->params['ditch'][$dk]['category_list'];
+        $ditch = Yii::$app->params['ditch'];
+        if (!$dk) {
+            $dks = array_keys($ditch);
+            if (count($dks) > 0) {
+                $category = [];
+                foreach ($dks as $dk) {
+                    if (isset($ditch[$dk]['category_list'])) {
+                        $category = array_merge($category, $ditch[$dk]['category_list']);
+                    }
+                }
+                return $category;
+            }
         } else {
-            $category = [];
+            if (isset($ditch[$dk]['category_list'])) {
+                return $ditch[$dk]['category_list'];
+            }
         }
-        return $category;
+        return [];
     }
 
     /**
@@ -123,10 +135,10 @@ class Category extends Model
                     $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
                     $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
                     $cache = Yii::$app->cache;
-                    $caption = $cache->get('ditch_'.$dk.'_fiction_'.$fiction_key.'_config');
-                    if (!$caption){
+                    $caption = $cache->get('ditch_' . $dk . '_fiction_' . $fiction_key . '_config');
+                    if (!$caption) {
                         $cache->set(
-                            'ditch_'.$dk.'_fiction_'.$fiction_key.'_config',
+                            'ditch_' . $dk . '_fiction_' . $fiction_key . '_config',
                             [
                                 'fiction_name' => $title,
                                 'fiction_key' => $fiction_key,
@@ -145,7 +157,7 @@ class Category extends Model
                         $list = [];
                         global $list;
                         $linkList = $crawler->filter($rule['fiction_caption_list_rule']);
-                        $linkList->each(function($node) use ($list, $rule, $url){
+                        $linkList->each(function ($node) use ($list, $rule, $url) {
                             global $list;
                             if ($node) {
                                 $text = $node->text();
