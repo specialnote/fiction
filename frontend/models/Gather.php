@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace frontend\models;
 use Overtrue\Pinyin\Pinyin;
 use Yii;
 use Goutte\Client;

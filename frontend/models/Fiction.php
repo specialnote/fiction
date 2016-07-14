@@ -1,6 +1,6 @@
 <?php
 
-namespace common\models;
+namespace frontend\models;
 
 use Goutte\Client;
 use Overtrue\Pinyin\Pinyin;
