@@ -106,4 +106,35 @@ class Gather
             'fiction_caption_list' => isset($fiction_caption_list) ? $fiction_caption_list : [],
         ];
     }
+
+    //根据url采集小说信息
+    public static function getFictionInformationByUrl($ditch_key, $url){
+        $ditch = new Ditch($ditch_key);
+        $rule = $ditch->getFictionRule();//获取渠道采集规则
+        $rule = $rule['fiction_caption_list_rule'];
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
+        try {
+            $pinyin = new Pinyin();
+            $title = $crawler->filter($rule['fiction_title_rule'])->eq($rule['fiction_title_rule_num'])->text();
+            $title = trim($title);
+            $fiction_key = implode($pinyin->convert($title));
+            $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
+            $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
+            $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
+            return [
+                'fiction_name' => $title,
+                'fiction_key' => $fiction_key,
+                'fiction_author' => $author,
+                'fiction_introduction' => $description,
+                'fiction_caption_url' => $url,
+                'fiction_caption_list_type' => 'current',
+                'fiction_caption_list_rule' => '#list dl dd a'
+            ];
+        }catch (Exception $e){
+
+        }
+        return [];
+    }
+
 }

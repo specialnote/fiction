@@ -104,14 +104,14 @@ class Fiction extends Model
 
     /**
      * 获取指定小说指定章节上上一章、下一章url
-     * @param $dk
-     * @param $fk
+     * @param $ditch_key
+     * @param $fiction_key
      * @param $url
      * @return array
      */
-    public static function getPrevAndNext($dk, $fk, $url)
+    public static function getPrevAndNext($ditch_key, $fiction_key, $url)
     {
-        $list = self::getFictionList($dk, $fk);
+        $list = self::getFictionList($ditch_key, $fiction_key);
         $urls = ArrayHelper::getColumn($list, 'url');
         if (in_array(base64_encode($url), $urls)) {
             $current = array_search(base64_encode($url), $urls);
@@ -133,14 +133,14 @@ class Fiction extends Model
 
     /**
      * 获取指定章节的title和序号
-     * @param $dk
-     * @param $fk
+     * @param $ditch_key
+     * @param $fiction_key
      * @param $url
      * @return array
      */
-    public static function getFictionTitleAndNum($dk, $fk, $url)
+    public static function getFictionTitleAndNum($ditch_key, $fiction_key, $url)
     {
-        $list = self::getFictionList($dk, $fk);
+        $list = self::getFictionList($ditch_key, $fiction_key);
         $urls = ArrayHelper::getColumn($list, 'url');
         if (in_array(base64_encode($url), $urls)) {
             $current = array_search(base64_encode($url), $urls);
@@ -158,21 +158,21 @@ class Fiction extends Model
     /**
      * 返回指定小说的配置
      * 如果没有找到，则返回null
-     * @param $dk
-     * @param $fk
+     * @param $ditch_key
+     * @param $fiction_key
      * @param $url
      * @return null|array
      */
-    public static function getFiction($dk, $fk, $url = null)
+    public static function getFiction($ditch_key, $fiction_key, $url = null)
     {
         //根据分类从列表获取url读取小说信息 2.0
         $cache = Yii::$app->cache;
-        $fiction = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_config');
+        $fiction = $cache->get('ditch_' . $ditch_key . '_fiction_' . $fiction_key . '_config');
         if (!$fiction) {
-            $fiction = self::getFictionByUrl($dk, $url);
-            if ($fiction){
+            $fiction = self::getFictionByUrl($ditch_key, $url);
+            if ($fiction) {
                 $cache->set(
-                    'ditch_' . $dk . '_fiction_' . $fk . '_config',
+                    'ditch_' . $ditch_key . '_fiction_' . $fiction_key . '_config',
                     $fiction,
                     Yii::$app->params['fiction_configure_cache_expire_time']
                 );
@@ -186,36 +186,23 @@ class Fiction extends Model
 
     /**
      * 根据小说url获取小说信息并缓存
-     * @param $dk
+     * @param $ditch_key
      * @param $url
      * @return array
      */
-    public static function getFictionByUrl($dk, $url){
-        $ditch = new Ditch($dk);
-        $rule = $ditch->getFictionRule();//获取渠道采集规则
-        $rule = $rule['fiction_caption_list_rule'];
-        $client = new Client();
-        $crawler = $client->request('GET', $url);
-        try {
-            $pinyin = new Pinyin();
-            $title = $crawler->filter($rule['fiction_title_rule'])->eq($rule['fiction_title_rule_num'])->text();
-            $title = trim($title);
-            $fiction_key = implode($pinyin->convert($title));
-            $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
-            $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
-            $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
-            return [
-                'fiction_name' => $title,
-                'fiction_key' => $fiction_key,
-                'fiction_author' => $author,
-                'fiction_introduction' => $description,
-                'fiction_caption_url' => $url,
-                'fiction_caption_list_type' => 'current',
-                'fiction_caption_list_rule' => '#list dl dd a'
-            ];
-        }catch (Exception $e){
-
+    public static function getFictionByUrl($ditch_key, $url)
+    {
+        $cache = Yii::$app->cache;
+        $fictionInformation = $cache->get('ditch_' . $ditch_key . '_fiction_' . $url . '_config');
+        if (!$fictionInformation) {
+            $fictionInformation = Gather::getFictionInformationByUrl($ditch_key, $url);
+            $cache->set(
+                'ditch_' . $ditch_key . '_fiction_' . $fictionInformation['fiction_key'] . '_config', $fictionInformation, Yii::$app->params['fiction_configure_cache_expire_time']
+            );
+            $cache->set(
+                'ditch_' . $ditch_key . '_fiction_' . $url . '_config', $fictionInformation, Yii::$app->params['fiction_configure_cache_expire_time']
+            );
         }
-        return [];
+        return $fictionInformation;
     }
 }
