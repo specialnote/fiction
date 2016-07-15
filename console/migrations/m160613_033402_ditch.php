@@ -8,7 +8,7 @@ class m160613_033402_ditch extends Migration
     {
         $this->createTable('{{%ditch}}',[
             'id' => $this->primaryKey(),
-            'item_id' => $this->integer(),
+            'ditch_key' => $this->string(80),
             'type' =>$this->integer(3),
             'url' => $this->string(100),
             'name' => $this->string(50),

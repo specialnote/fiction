@@ -8,6 +8,8 @@ class m160612_072921_fiction extends Migration
     {
         $this->createTable('{{%fiction}}', [
             'id' => $this->primaryKey(),
+            'fiction_key' => $this->string(100),
+            'ditch_key' => $this->string(80),
             'name' => $this->string(50),
             'description' => $this->text(),
             'author' => $this->string(50),
