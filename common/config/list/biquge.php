@@ -25,9 +25,7 @@ return [
                 'xuanhuan' => [
                     'category_key' => 'xuanhuan',
                     'category_name' => '玄幻类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器
@@ -36,9 +34,7 @@ return [
                 'youxi' => [
                     'category_key' => 'youxi',
                     'category_name' => '游戏类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器
@@ -47,9 +43,7 @@ return [
                 'xiuzhen' => [
                     'category_key' => 'xiuzhen',
                     'category_name' => '修真类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器
@@ -58,9 +52,7 @@ return [
                 'doushi' => [
                     'category_key' => 'doushi',
                     'category_name' => '都市类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器
@@ -69,9 +61,7 @@ return [
                 'lishi' => [
                     'category_key' => 'lishi',
                     'category_name' => '历史类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器
@@ -80,9 +70,7 @@ return [
                 'kehuan' => [
                     'category_key' => 'kehuan',
                     'category_name' => '科幻类小说',
-                    'category_url' => [
-                        'http://www.biquge.la/xiaoshuodaquan/',
-                    ],//每个分类可以有多个url，防止分页
+                    'category_url' =>  'http://www.biquge.la/xiaoshuodaquan/',
                     'category_list_rule' => '#main .novellist',//分类位置在页面中的选择器
                     'category_list_num' => 0,//表示该分类是在页面中指定选择器的第一个（0表示第一个）
                     'list_link_rule' => 'ul li a',//链接相对于分类的选择器

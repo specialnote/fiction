@@ -13,7 +13,7 @@ use yii\db\ActiveRecord;
  * @property string $url 渠道主页地址
  * @property string $name 渠道名称
  * @property integer $status 渠道状态 1 已上线；2 未上线；3 已删除
- * @property string $ditch_key 渠道key，名称全拼组成
+ * @property string $ditchKey 渠道key，名称全拼组成
  * @property string $titleRule 小说标题采集规则
  * @property integer $titleNum 小说标题DOM序号
  * @property string $authorRule
@@ -43,7 +43,7 @@ class Ditch extends ActiveRecord
             [['type', 'status', 'titleNum', 'authorNum', 'descriptionNum'], 'integer'],
             [['url'], 'string', 'max' => 100],
             [['name'], 'string', 'max' => 50],
-            [['ditch_key'], 'string', 'max' => 80],
+            [['ditchKey'], 'string', 'max' => 80],
             [['titleRule', 'authorRule', 'descriptionRule', 'captionRule', 'detailRule', 'captionLinkType'], 'string', 'max' => 30],
         ];
     }
@@ -59,7 +59,7 @@ class Ditch extends ActiveRecord
             'url' => 'Url',//渠道主页地址
             'name' => 'Name',//渠道名称
             'status' => 'Status',//渠道状态 1 已上线；2 未上线；3 已删除
-            'ditch_key' => 'Ditch Key',//渠道key，名称全拼组成
+            'ditchKey' => 'Ditch Key',//渠道key，名称全拼组成
             'titleRule' => 'Title Rule',//小说标的采集规则
             'titleNum' => 'Title Num',//小说标的DOM序号
             'authorRule' => 'Author Rule',
@@ -86,7 +86,7 @@ class Ditch extends ActiveRecord
             if (!$ditch_key){
                 continue;
             }
-            $ditch = Ditch::find()->where(['ditch_key' => $v['ditch_key']])->one();
+            $ditch = Ditch::find()->where(['ditchKey' => $v['ditch_key']])->one();
             if (!$ditch){
                 $ditch = new Ditch();
             }
@@ -104,7 +104,7 @@ class Ditch extends ActiveRecord
     {
         //todo 更新渠道
         if (isset($config['ditch_name']) && isset($config['ditch_key']) && isset($config['ditch_home_url'])) {
-            $this->ditch_key = $config['ditch_key'];
+            $this->ditchKey = $config['ditch_key'];
             $this->name = $config['ditch_name'];
             $this->url = $config['ditch_home_url'];
             $this->titleRule = $config['title_rule'];
