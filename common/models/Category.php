@@ -88,7 +88,7 @@ class Category extends ActiveRecord
                         ]);
                         $res = $category->save();
                         if (!$res){
-                            var_dump($category->getErrors());
+                            //todo 保存失败
                         }
                     }
                 }
