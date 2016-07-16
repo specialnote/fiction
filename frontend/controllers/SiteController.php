@@ -1,7 +1,7 @@
 <?php
 namespace frontend\controllers;
 
-use common\models\Category;
+use frontend\models\Category;
 use Yii;
 
 class SiteController extends BaseController

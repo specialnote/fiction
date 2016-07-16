@@ -2,9 +2,9 @@
 
 namespace frontend\controllers;
 
-use common\models\Category;
-use common\models\Fiction;
-use common\models\Http;
+use frontend\models\Category;
+use frontend\models\Fiction;
+use frontend\models\Http;
 use Goutte\Client;
 use yii\base\Exception;
 use yii\helpers\Html;

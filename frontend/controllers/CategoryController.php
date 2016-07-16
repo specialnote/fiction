@@ -2,8 +2,9 @@
 
 namespace frontend\controllers;
 
-use common\models\Category;
-use common\models\Fiction;
+use frontend\models\Category;
+use frontend\models\Fiction;
+use yii\base\Exception;
 use yii\data\Pagination;
 use yii\web\Controller;
 
