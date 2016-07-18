@@ -12,4 +12,10 @@ class FictionController extends Controller
     {
         Fiction::updateCategoryFictionList();
     }
+    
+    //更新指定小说的章节列表
+    public function actionUpdateFictionChapterList()
+    {
+        
+    }
 }

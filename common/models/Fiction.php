@@ -4,6 +4,7 @@ namespace common\models;
 
 use Overtrue\Pinyin\Pinyin;
 use yii\db\ActiveRecord;
+use common\models\Ditch;
 
 /**
  * This is the model class for table "{{%fiction}}".
@@ -95,7 +96,7 @@ class Fiction extends ActiveRecord
                     foreach ($fictionList as $v) {
                         if ($v['url'] && $v['text']) {
                             $fictionKey = implode($pinyin->convert($v['text']));
-                            $fiction = self::find()->where(['ditchKey' => $ditchKey, 'categoryKey' => $category, 'fictionKey' => $fictionKey])->one();
+                            $fiction = self::find()->where(['ditchKey' => $ditchKey, 'fictionKey' => $fictionKey])->one();
                             if (null === $fiction) {
                                 $fiction = new self();
                                 $fiction->ditchKey = $ditchKey;
@@ -116,5 +117,25 @@ class Fiction extends ActiveRecord
                 //todo 记录日志 分类缺少必要信息
             }
         }
+    }
+    
+    public function  updateFIctionChapterList()
+    {
+        $fictions = Fiction::find()->where(['status' => 1])->all();
+        foreach  ($fictions as $fiction) {
+            $url = $fiction->url;
+            $ditch = $fiction->ditch;
+            if ($ditch){
+                $rule = $ditch->captionRule;
+                $captionLinkType = $ditch->captionLinkType;
+            } else {
+                //todo 记录日志 没有找到指定小说的渠道
+            }
+        }
+    }
+    
+    public function getDitch()
+    {
+        return $this->hasOne(Ditch::class, ['ditchKey' => 'ditchKey']);
     }
 }
