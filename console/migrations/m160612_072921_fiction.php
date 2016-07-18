@@ -10,9 +10,12 @@ class m160612_072921_fiction extends Migration
             'id' => $this->primaryKey(),
             'fictionKey' => $this->string(100),
             'ditchKey' => $this->string(80),
+            'categoryKey' => $this->string(80),
             'name' => $this->string(50),
             'description' => $this->text(),
             'author' => $this->string(50),
+            'url' => $this->string(50),
+            'status' => $this->integer(1)->defaultValue(1),
         ]);
     }
 

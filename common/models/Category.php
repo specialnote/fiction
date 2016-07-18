@@ -73,7 +73,7 @@ class Category extends ActiveRecord
         //更新数据库分类表
         foreach ($list as $k => $ditch) {
             foreach ($ditch as $v) {
-                if ($v['category_key']){
+                if ($v['category_key']) {
                     $category = Category::find()->where(['ditchKey' => $k, 'categoryKey' => $v['category_key']])->one();
                     if (null === $category) {
                         $category = new Category([
@@ -87,12 +87,17 @@ class Category extends ActiveRecord
                             'fictionLinkType' => $v['category_list_link_type'],
                         ]);
                         $res = $category->save();
-                        if (!$res){
+                        if (!$res) {
                             //todo 保存失败
                         }
                     }
                 }
             }
         }
+    }
+
+    public function getDitch()
+    {
+        return $this->hasOne(Ditch::class, ['ditchKey' => 'ditchKey']);
     }
 }
