@@ -2,7 +2,6 @@
 
 namespace frontend\models;
 
-
 class Ditch
 {
     public $ditch_key;
@@ -13,7 +12,8 @@ class Ditch
     }
 
     /**
-     * 获取指定渠道的小说分类配置列表
+     * 获取指定渠道的小说分类配置列表.
+     *
      * @return array
      */
     public function getCategoryListConfig()
@@ -21,12 +21,13 @@ class Ditch
         if (isset(\Yii::$app->params['ditch'][$this->ditch_key]['category_list'])) {
             return \Yii::$app->params['ditch'][$this->ditch_key]['category_list'];
         } else {
-         return [];
+            return [];
         }
     }
 
     /**
-     * 获取指定渠道的小说采集规则（包括章节列表规则、小说详情规则）
+     * 获取指定渠道的小说采集规则（包括章节列表规则、小说详情规则）.
+     *
      * @return array
      */
     public function getFictionRule()
@@ -38,7 +39,8 @@ class Ditch
         }
     }
     /**
-     * 获取指定渠道的小说章节列表规则采集规则
+     * 获取指定渠道的小说章节列表规则采集规则.
+     *
      * @return array
      */
     public function getFictionCaptionListRule()

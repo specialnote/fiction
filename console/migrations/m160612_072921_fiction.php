@@ -26,5 +26,4 @@ class m160612_072921_fiction extends Migration
 
         return false;
     }
-
 }

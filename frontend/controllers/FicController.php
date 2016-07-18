@@ -4,12 +4,10 @@ namespace frontend\controllers;
 
 use frontend\models\Category;
 use frontend\models\Fiction;
-use frontend\models\Http;
 use Goutte\Client;
 use yii\base\Exception;
 use yii\helpers\Html;
 use Yii;
-use yii\web\Response;
 
 class FicController extends BaseController
 {
@@ -39,12 +37,12 @@ class FicController extends BaseController
         $url = base64_decode($this->get('url'));//解密url
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current = $data['current'];
-        $captionName =  $data['title'];
+        $captionName = $data['title'];
         $fiction = Fiction::getFiction($dk, $fk);
         if ($fiction) {
             $cache = Yii::$app->cache;
-            $fictionDetail = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_url_' . $url . '_detail');
-            if (!$fictionDetail){
+            $fictionDetail = $cache->get('ditch_'.$dk.'_fiction_'.$fk.'_url_'.$url.'_detail');
+            if (!$fictionDetail) {
                 $client = new Client();
                 $crawler = $client->request('GET', $url);
                 $content = '';
@@ -59,7 +57,7 @@ class FicController extends BaseController
                                 $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
                                 $text = preg_replace('/(<br\s?\/?>){1,}/', '<br/><br/>', $text);
                                 $text = strip_tags($text, '<p><div><br>');
-                                $content = $content . $text;
+                                $content = $content.$text;
                             });
                         }
                     }
@@ -67,7 +65,7 @@ class FicController extends BaseController
                     //todo 处理查找失败
                 }
                 if ($content) {
-                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_url_' . $url . '_detail', $content, Yii::$app->params['fiction_caption_detail']);
+                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_url_'.$url.'_detail', $content, Yii::$app->params['fiction_caption_detail']);
                 }
             } else {
                 $content = $fictionDetail;
@@ -97,6 +95,7 @@ class FicController extends BaseController
         $url = base64_decode($this->get('url'));
         if (Yii::$app->request->isAjax) {
             $res = Fiction::getPrevAndNext($dk, $fk, $url);
+
             return $res;
         } else {
             $this->err404();

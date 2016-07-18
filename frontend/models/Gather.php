@@ -1,11 +1,11 @@
 <?php
 
 namespace frontend\models;
+
 use Overtrue\Pinyin\Pinyin;
 use Yii;
 use Goutte\Client;
 use yii\base\Exception;
-
 
 class Gather
 {
@@ -34,7 +34,7 @@ class Gather
                                     $href = $node->attr('href');
                                     if ($text && $href) {
                                         if ($category['category_list_link_type'] === 'home') {
-                                            $href = rtrim($homePage, '/') . '/' . $href;
+                                            $href = rtrim($homePage, '/').'/'.$href;
                                         }
                                         $list[] = ['url' => $href, 'text' => $text];
                                     }
@@ -42,12 +42,13 @@ class Gather
                             });
                         }
                     } catch (Exception $e) {
-
                     }
                 }
-               return $list;
+
+                return $list;
             }
         }
+
         return [];
     }
 
@@ -69,14 +70,14 @@ class Gather
                     $author = $crawler->filter($rule['fiction_author_rule'])->eq($rule['fiction_author_rule_num'])->text();
                     $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
                     $description = $crawler->filter($rule['fiction_description_rule'])->eq($rule['fiction_description_rule_num'])->text();
-                    $fiction_information =  [
+                    $fiction_information = [
                         'fiction_name' => $title,
                         'fiction_key' => $fiction_key,
                         'fiction_author' => $author,
                         'fiction_introduction' => $description,
                         'fiction_caption_url' => $url,
                         'fiction_caption_list_type' => 'current',
-                        'fiction_caption_list_rule' => '#list dl dd a'
+                        'fiction_caption_list_rule' => '#list dl dd a',
                     ];
 
                     //获取小说章节列表
@@ -89,7 +90,7 @@ class Gather
                             $text = $node->text();
                             $href = $node->attr('href');
                             if ($rule['fiction_caption_list_type'] === 'current') {
-                                $href = rtrim($url, '/') . '/' . $href;
+                                $href = rtrim($url, '/').'/'.$href;
                             }
                             $list[] = ['url' => base64_encode($href), 'text' => $text];
                         }
@@ -97,14 +98,13 @@ class Gather
                     //返回小说详情
                    $fiction_caption_list = $list;
                 } catch (Exception $e) {
-
                 }
             }
         }
+
         return [
             'fiction_information' => isset($fiction_information) ? $fiction_information : [],
             'fiction_caption_list' => isset($fiction_caption_list) ? $fiction_caption_list : [],
         ];
     }
-
 }

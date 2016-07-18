@@ -2,28 +2,27 @@
 
 namespace common\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%category}}".
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $url
  * @property string $categoryKey
  * @property string $ditchKey
  * @property string $categoryRule
- * @property integer $categoryNum
+ * @property int $categoryNum
  * @property string $fictionRule
  * @property string $fictionLinkType
- * @property integer $created_at
- * @property integer $updated_at
+ * @property int $created_at
+ * @property int $updated_at
  */
 class Category extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -31,7 +30,7 @@ class Category extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -45,7 +44,7 @@ class Category extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -55,10 +54,10 @@ class Category extends ActiveRecord
             'url' => 'Url',
             'categoryKey' => 'Category Key',
             'ditchKey' => 'Ditch Key',
-            'categoryRule' => 'Category Rule',//分类位置在页面中的选择器
-            'categoryNum' => 'Category Num',//分类位置在页面中的选择器序号(0开始)
-            'fictionRule' => 'Fiction Rule',//分类的所有小说列表在页面中的选择器
-            'fictionLinkType' => 'Fiction Link Type',//章节列表链接类型。1表示current，是相对小说页面的相对地址；2表示home,即相对于渠道主页的地址
+            'categoryRule' => 'Category Rule', //分类位置在页面中的选择器
+            'categoryNum' => 'Category Num', //分类位置在页面中的选择器序号(0开始)
+            'fictionRule' => 'Fiction Rule', //分类的所有小说列表在页面中的选择器
+            'fictionLinkType' => 'Fiction Link Type', //章节列表链接类型。1表示current，是相对小说页面的相对地址；2表示home,即相对于渠道主页的地址
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -74,9 +73,9 @@ class Category extends ActiveRecord
         foreach ($list as $k => $ditch) {
             foreach ($ditch as $v) {
                 if ($v['category_key']) {
-                    $category = Category::find()->where(['ditchKey' => $k, 'categoryKey' => $v['category_key']])->one();
+                    $category = self::find()->where(['ditchKey' => $k, 'categoryKey' => $v['category_key']])->one();
                     if (null === $category) {
-                        $category = new Category([
+                        $category = new self([
                             'categoryKey' => $v['category_key'],
                             'ditchKey' => $k,
                             'name' => $v['category_name'],

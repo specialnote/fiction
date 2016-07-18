@@ -2,7 +2,6 @@
 
 namespace frontend\models\view;
 
-
 use yii\web\View;
 
 class FrontendView extends View

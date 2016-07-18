@@ -3,13 +3,12 @@
 namespace common\models;
 
 use Overtrue\Pinyin\Pinyin;
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%fiction}}".
  *
- * @property integer $id
+ * @property int $id
  * @property string $categoryKey
  * @property string $fictionKey
  * @property string $ditchKey
@@ -17,12 +16,12 @@ use yii\db\ActiveRecord;
  * @property string $description
  * @property string $author
  * @property string $url
- * @property integer $status
+ * @property int $status
  */
 class Fiction extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -30,7 +29,7 @@ class Fiction extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -44,7 +43,7 @@ class Fiction extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -62,7 +61,7 @@ class Fiction extends ActiveRecord
     }
 
     /**
-     * 更新所有分类的小说信息
+     * 更新所有分类的小说信息.
      */
     public static function updateCategoryFictionList()
     {
@@ -94,23 +93,23 @@ class Fiction extends ActiveRecord
                 $fictionList = Gather::gatherCategoryFictionList($url, $categoryRule, $fictionRule, $categoryNum, $refUrl);
                 if ($fictionList) {
                     foreach ($fictionList as $v) {
-                       if ($v['url'] && $v['text']) {
-                           $fictionKey = implode($pinyin->convert($v['text']));
-                           $fiction = Fiction::find()->where(['ditchKey' => $ditchKey, 'categoryKey' => $category, 'fictionKey' => $fictionKey])->one();
-                           if (null === $fiction) {
-                               $fiction = new Fiction();
-                               $fiction->ditchKey = $ditchKey;
-                               $fiction->categoryKey = $categoryKey;
-                               $fiction->fictionKey = $fictionKey;
-                               $fiction->status = 1;
-                           }
-                           $fiction->url = $url;
-                           $fiction->name = $v['text'];
-                           $res = $fiction->save();
-                           if (!$res){
-                               //todo 添加日志 更新小说信息失败
-                           }
-                       }
+                        if ($v['url'] && $v['text']) {
+                            $fictionKey = implode($pinyin->convert($v['text']));
+                            $fiction = self::find()->where(['ditchKey' => $ditchKey, 'categoryKey' => $category, 'fictionKey' => $fictionKey])->one();
+                            if (null === $fiction) {
+                                $fiction = new self();
+                                $fiction->ditchKey = $ditchKey;
+                                $fiction->categoryKey = $categoryKey;
+                                $fiction->fictionKey = $fictionKey;
+                                $fiction->status = 1;
+                            }
+                            $fiction->url = $url;
+                            $fiction->name = $v['text'];
+                            $res = $fiction->save();
+                            if (!$res) {
+                                //todo 添加日志 更新小说信息失败
+                            }
+                        }
                     }
                 }
             } else {

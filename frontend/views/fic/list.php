@@ -1,14 +1,14 @@
 <?php
     use yii\helpers\Html;
 
-    $list = $fictionDetail['list'];
+$list = $fictionDetail['list'];
     $sort_list = $list;
     rsort($sort_list);
     $frontend_host = Yii::$app->params['frontend_host'];
     $fk = $fictionDetail['fiction_key'];
     $title = Html::encode($fictionDetail['title']);
     $author = Html::encode($fictionDetail['author']);
-    $this->title = $title . '('.$author.')-最新目录';
+    $this->title = $title.'('.$author.')-最新目录';
     $this->headline = $title;
 ?>
 <div class="row" id="list_header">

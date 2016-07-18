@@ -22,7 +22,7 @@ class RequestBehavior extends Behavior
         if ($request->isAjax) {
             $headers = Yii::$app->request->headers;
             $accept = $headers->get('Accept');
-            if ('text/html' !== $accept){
+            if ('text/html' !== $accept) {
                 Yii::$app->response->format = Response::FORMAT_JSON;
             }
         }

@@ -19,7 +19,7 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Yii::$app->params['company_name'] . Html::encode($this->title) ?></title>
+    <title><?= Yii::$app->params['company_name'].Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -35,7 +35,7 @@ AppAsset::register($this);
         ],
     ]);
     $categoryList = \frontend\models\Category::getDitchCategoryList();
-    foreach($categoryList as $category) {
+    foreach ($categoryList as $category) {
         $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
     }
     echo Nav::widget([

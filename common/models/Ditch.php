@@ -2,24 +2,23 @@
 
 namespace common\models;
 
-use Yii;
 use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%ditch}}".
  *
- * @property integer $id
- * @property integer $type 渠道类型，可以自定义
+ * @property int $id
+ * @property int $type 渠道类型，可以自定义
  * @property string $url 渠道主页地址
  * @property string $name 渠道名称
- * @property integer $status 渠道状态 1 已上线；2 未上线；3 已删除
+ * @property int $status 渠道状态 1 已上线；2 未上线；3 已删除
  * @property string $ditchKey 渠道key，名称全拼组成
  * @property string $titleRule 小说标题采集规则
- * @property integer $titleNum 小说标题DOM序号
+ * @property int $titleNum 小说标题DOM序号
  * @property string $authorRule
- * @property integer $authorNum
+ * @property int $authorNum
  * @property string $descriptionRule
- * @property integer $descriptionNum
+ * @property int $descriptionNum
  * @property string $captionRule
  * @property string $detailRule
  * @property string $captionLinkType 章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
@@ -27,7 +26,7 @@ use yii\db\ActiveRecord;
 class Ditch extends ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -35,7 +34,7 @@ class Ditch extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -49,26 +48,26 @@ class Ditch extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'type' => 'Type',//渠道类型，可以自定义
-            'url' => 'Url',//渠道主页地址
-            'name' => 'Name',//渠道名称
-            'status' => 'Status',//渠道状态 1 已上线；2 未上线；3 已删除
-            'ditchKey' => 'Ditch Key',//渠道key，名称全拼组成
-            'titleRule' => 'Title Rule',//小说标的采集规则
-            'titleNum' => 'Title Num',//小说标的DOM序号
+            'type' => 'Type', //渠道类型，可以自定义
+            'url' => 'Url', //渠道主页地址
+            'name' => 'Name', //渠道名称
+            'status' => 'Status', //渠道状态 1 已上线；2 未上线；3 已删除
+            'ditchKey' => 'Ditch Key', //渠道key，名称全拼组成
+            'titleRule' => 'Title Rule', //小说标的采集规则
+            'titleNum' => 'Title Num', //小说标的DOM序号
             'authorRule' => 'Author Rule',
             'authorNum' => 'Author Num',
             'descriptionRule' => 'Description Rule',
             'descriptionNum' => 'Description Num',
             'captionRule' => 'Caption Rule',
             'detailRule' => 'Detail Rule',
-            'captionLinkType' => 'Caption Link Type',//章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
+            'captionLinkType' => 'Caption Link Type', //章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
         ];
     }
 
@@ -78,17 +77,17 @@ class Ditch extends ActiveRecord
         $config = new Config();
         //获取所有渠道信息
         $info = $config->getInformation();
-        if (!$info){
+        if (!$info) {
             throw  new \Exception('没有找到渠道相关配置');
         }
-        foreach ($info as $v){
+        foreach ($info as $v) {
             $ditch_key = $v['ditch_key'];
-            if (!$ditch_key){
+            if (!$ditch_key) {
                 continue;
             }
-            $ditch = Ditch::find()->where(['ditchKey' => $v['ditch_key']])->one();
-            if (!$ditch){
-                $ditch = new Ditch();
+            $ditch = self::find()->where(['ditchKey' => $v['ditch_key']])->one();
+            if (!$ditch) {
+                $ditch = new self();
             }
             $ditch->configureDitch($v);
             $ditch->save();
@@ -97,7 +96,9 @@ class Ditch extends ActiveRecord
 
     /**
      * @param array $config 渠道信息配置数组（经过处理之后的一维数组）
+     *
      * @return Ditch
+     *
      * @throws \Exception
      */
     private function configureDitch($config)
@@ -119,6 +120,7 @@ class Ditch extends ActiveRecord
         } else {
             throw new \Exception('缺少核心配置参数');
         }
+
         return $this;
     }
 }

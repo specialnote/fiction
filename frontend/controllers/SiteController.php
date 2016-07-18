@@ -1,8 +1,8 @@
 <?php
+
 namespace frontend\controllers;
 
 use frontend\models\Category;
-use Yii;
 
 class SiteController extends BaseController
 {
@@ -15,6 +15,7 @@ class SiteController extends BaseController
     {
         $dk = $this->ditch_key;
         $categoryList = Category::getDitchCategoryList($dk);
+
         return $this->render('index', [
             'categoryList' => $categoryList,
             'dk' => $dk,

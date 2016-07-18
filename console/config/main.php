@@ -1,10 +1,11 @@
 <?php
+
 $params = array_merge(
-    require(__DIR__ . '/../../common/config/params.php'),
-    require(__DIR__ . '/../../common/config/params-local.php'),
-    require(__DIR__ . '/params.php'),
-    require(__DIR__ . '/params-local.php'),
-    require(__DIR__ . '/../../common/config/list/biquge.php')//笔趣阁
+    require(__DIR__.'/../../common/config/params.php'),
+    require(__DIR__.'/../../common/config/params-local.php'),
+    require(__DIR__.'/params.php'),
+    require(__DIR__.'/params-local.php'),
+    require(__DIR__.'/../../common/config/list/biquge.php')//笔趣阁
 );
 
 return [

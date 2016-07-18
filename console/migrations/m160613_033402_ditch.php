@@ -6,10 +6,10 @@ class m160613_033402_ditch extends Migration
 {
     public function up()
     {
-        $this->createTable('{{%ditch}}',[
+        $this->createTable('{{%ditch}}', [
             'id' => $this->primaryKey(),
             'ditchKey' => $this->string(80),
-            'type' =>$this->integer(3),
+            'type' => $this->integer(3),
             'url' => $this->string(100),
             'name' => $this->string(50),
             'status' => $this->integer(3),
@@ -23,5 +23,4 @@ class m160613_033402_ditch extends Migration
 
         return false;
     }
-
 }
