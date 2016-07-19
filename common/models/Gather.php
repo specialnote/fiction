@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Goutte\Client;
+use Overtrue\Pinyin\Pinyin;
 
 class Gather
 {
@@ -44,5 +45,42 @@ class Gather
         }
 
         return $list;
+    }
+
+    //采集指定小说的 章节列表 以及 小说信息
+    public static function getFictionInformationAndCaptionList($url, Ditch $ditch, $chapterRule, $refUrl = '')
+    {
+        $client = new Client();
+        if ($url) {
+            $crawler = $client->request('GET', $url);
+            try {
+                //获取小说信息
+                $author = $crawler->filter($ditch->authorRule)->eq($ditch->authorNum)->text();
+                $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
+                $description = $crawler->filter($ditch->descriptionRule)->eq($ditch->descriptionNum)->text();
+                //获取小说章节列表
+                $list = [];
+                global $list;
+                $linkList = $crawler->filter($chapterRule);
+                $linkList->each(function ($node) use ($list, $refUrl) {
+                    global $list;
+                    if ($node) {
+                        $text = $node->text();
+                        $href = $node->attr('href');
+                        if ($refUrl) {
+                            $href = rtrim($refUrl, '/').'/'.$href;
+                        }
+                        $list[] = ['url' => base64_encode($href), 'text' => $text];
+                    }
+                });
+            } catch (\Exception $e) {
+            }
+        }
+
+        return [
+            'author' => isset($author) ? $author : '',
+            'description' => isset($description) ? $description : '',
+            'list' => isset($list) ? $list : [],
+        ];
     }
 }

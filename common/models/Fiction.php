@@ -119,15 +119,34 @@ class Fiction extends ActiveRecord
         }
     }
     
-    public function  updateFIctionChapterList()
+    public function  updateFictionChapterList()
     {
-        $fictions = Fiction::find()->where(['status' => 1])->all();
+        $fictions = Fiction::find()->where(['status' => 1])->joinWith('ditch')->all();
         foreach  ($fictions as $fiction) {
             $url = $fiction->url;
             $ditch = $fiction->ditch;
             if ($ditch){
                 $rule = $ditch->captionRule;
                 $captionLinkType = $ditch->captionLinkType;
+                if ($captionLinkType === 'current') {
+                    $refUrl = rtrim($url, '/'). '/';
+                } elseif($captionLinkType === 'home'){
+                    $refUrl = $ditch->url;
+                } else {
+                    $refUrl = '';
+                }
+                $detail = Gather::getFictionInformationAndCaptionList($url, $ditch, $refUrl);
+                if ($detail) {
+                    if ($detail['author']) {
+                        $fiction->author = $detail['author'];
+                    }
+                    if ($detail['description']){
+                        $fiction->description = $detail['description'];
+                    }
+                    if ($detail['list']) {
+
+                    }
+                }
             } else {
                 //todo 记录日志 没有找到指定小说的渠道
             }
