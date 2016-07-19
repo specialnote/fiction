@@ -18,7 +18,7 @@ class Chapter extends Model
         $this->ditchKey = $fiction->ditchKey;
         $this->fictionKey = $fiction->fictionKey;
         $this->fictionId = $fiction->id;
-        $this->tableName = $this->ditchKey.'_'.$this->fictionKey;
+        $this->tableName = $this->ditchKey . '_' . $this->fictionKey;
         $this->createTable();
         return $this;
     }
@@ -36,11 +36,11 @@ class Chapter extends Model
         return $this->list;
     }
 
-   public function findById($fictionId,$chapterId)
-   {
+    public function findById($fictionId, $chapterId)
+    {
         //todo 从数据库获取数据
-       //todo 返回对象
-   }
+        //todo 返回对象
+    }
 
     public function updateFictionChapter($list)
     {

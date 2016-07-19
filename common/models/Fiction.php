@@ -118,19 +118,18 @@ class Fiction extends ActiveRecord
             }
         }
     }
-    
-    public function  updateFictionChapterList()
+
+    public function updateFictionChapterList()
     {
         $fictions = Fiction::find()->where(['status' => 1])->joinWith('ditch')->all();
-        foreach  ($fictions as $fiction) {
+        foreach ($fictions as $fiction) {
             $url = $fiction->url;
             $ditch = $fiction->ditch;
-            if ($ditch){
-                $rule = $ditch->captionRule;
+            if ($ditch) {
                 $captionLinkType = $ditch->captionLinkType;
                 if ($captionLinkType === 'current') {
-                    $refUrl = rtrim($url, '/'). '/';
-                } elseif($captionLinkType === 'home'){
+                    $refUrl = rtrim($url, '/') . '/';
+                } elseif ($captionLinkType === 'home') {
                     $refUrl = $ditch->url;
                 } else {
                     $refUrl = '';
@@ -140,7 +139,7 @@ class Fiction extends ActiveRecord
                     if ($detail['author']) {
                         $fiction->author = $detail['author'];
                     }
-                    if ($detail['description']){
+                    if ($detail['description']) {
                         $fiction->description = $detail['description'];
                     }
                     if ($detail['list']) {
@@ -152,7 +151,7 @@ class Fiction extends ActiveRecord
             }
         }
     }
-    
+
     public function getDitch()
     {
         return $this->hasOne(Ditch::class, ['ditchKey' => 'ditchKey']);

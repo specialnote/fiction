@@ -8,11 +8,11 @@ use Overtrue\Pinyin\Pinyin;
 class Gather
 {
     /**
-     * @param string $url          分类所在页面地址
+     * @param string $url 分类所在页面地址
      * @param string $categoryRule 分类所在区块的采集规则
-     * @param int    $categoryNum  根据分类规则获取分类的序号
-     * @param string $fictionRule  分类中小说列表的规则
-     * @param string $preUrl       小说地址的前缀
+     * @param int $categoryNum 根据分类规则获取分类的序号
+     * @param string $fictionRule 分类中小说列表的规则
+     * @param string $preUrl 小说地址的前缀
      *
      * @return array
      */
@@ -33,7 +33,7 @@ class Gather
                         $href = $node->attr('href');
                         if ($text && $href) {
                             if ($preUrl) {
-                                $href = rtrim($preUrl, '/').'/'.$href;
+                                $href = rtrim($preUrl, '/') . '/' . $href;
                             }
                             $list[] = ['url' => $href, 'text' => $text];
                         }
@@ -68,7 +68,7 @@ class Gather
                         $text = $node->text();
                         $href = $node->attr('href');
                         if ($refUrl) {
-                            $href = rtrim($refUrl, '/').'/'.$href;
+                            $href = rtrim($refUrl, '/') . '/' . $href;
                         }
                         $list[] = ['url' => base64_encode($href), 'text' => $text];
                     }
