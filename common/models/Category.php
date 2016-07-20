@@ -16,8 +16,6 @@ use yii\db\ActiveRecord;
  * @property int $categoryNum
  * @property string $fictionRule
  * @property string $fictionLinkType
- * @property int $created_at
- * @property int $updated_at
  */
 class Category extends ActiveRecord
 {
@@ -35,7 +33,7 @@ class Category extends ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at', 'categoryNum'], 'integer'],
+            [['categoryNum'], 'integer'],
             [['name', 'categoryRule', 'fictionRule'], 'string', 'max' => 50],
             [['url'], 'string', 'max' => 100],
             [['categoryKey', 'ditchKey'], 'string', 'max' => 32],
@@ -58,8 +56,6 @@ class Category extends ActiveRecord
             'categoryNum' => 'Category Num', //分类位置在页面中的选择器序号(0开始)
             'fictionRule' => 'Fiction Rule', //分类的所有小说列表在页面中的选择器
             'fictionLinkType' => 'Fiction Link Type', //章节列表链接类型。1表示current，是相对小说页面的相对地址；2表示home,即相对于渠道主页的地址
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
         ];
     }
 

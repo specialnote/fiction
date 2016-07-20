@@ -32,7 +32,6 @@ class SignupCest
      */
     public function _failed($I)
     {
-
     }
 
     /**

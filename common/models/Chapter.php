@@ -2,9 +2,9 @@
 
 namespace common\models;
 
-
 use yii\base\Model;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class Chapter extends Model
 {
@@ -26,10 +26,10 @@ class Chapter extends Model
     //动态添加表
     public function createTable()
     {
-        if (!$this->hasTable && $this->tableName) {
+        if (!$this->hasTable() && $this->tableName) {
             $sql = "
 CREATE TABLE IF NOT EXISTS ".$this->tableName."(
-	id INT(10) PRIMARY KEY,
+	id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	ditchKey VARCHAR(50),
 	fictionKey VARCHAR(50),
 	chapter VARCHAR(100),
@@ -42,9 +42,10 @@ CREATE TABLE IF NOT EXISTS ".$this->tableName."(
 
     public function hasTable()
     {
-        $sql = "SHOW DATABASES";
-        $res = Yii::$app->db->createCommand($sql)->execute();
-        var_dump($res);
+        $sql = "SHOW TABLES";
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $table = ArrayHelper::getColumn($res, 'Tables_in_fiction');
+        return in_array($this->tableName, $table);
     }
 
     //获取指定渠道指定小说的章节列表
@@ -62,16 +63,16 @@ CREATE TABLE IF NOT EXISTS ".$this->tableName."(
     //将章节列表保存到数据库
     public function updateFictionChapter($list)
     {
-        if ($this->ditchKey && $this->fictionKey && $this->tableName) {
+        if ($this->ditchKey && $this->fictionKey && $this->tableName && $this->hasTable()) {
             $data = "";
             foreach ($list as $k => $v) {
                 if ($v['text'] && $v['url']) {
-                    $data .= "('" . ($k + 1) . "','" . $v['text'] . "','" . $v['ur'] . "''),";
+                    $data .= "('" . $this->ditchKey . "','".$this->fictionKey."','". $v['text'] . "','" . $v['url'] . "'),";
                 }
             }
             $data = rtrim($data, ',');
-            $sql = "INSERT INTO :tableName (listNum, chapter, url) VALUES :data";
-            $res = Yii::$app->db->createCommand($sql, ['tableName' => $this->tableName, 'data' => $data])->execute();
+            $sql = "INSERT INTO ".$this->tableName." (ditchKey, fictionKey, chapter, url) VALUES $data";
+            $res = Yii::$app->db->createCommand($sql)->execute();
             if ($res) {
                 return true;
             }

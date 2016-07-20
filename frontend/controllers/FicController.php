@@ -37,7 +37,7 @@ class FicController extends BaseController
         $url = base64_decode($this->get('url'));//解密url
         $data = Fiction::getFictionTitleAndNum($dk, $fk, $url);
         $current = $data['current'];
-        $captionName = $data['title'];
+        $chapterName = $data['title'];
         $fiction = Fiction::getFiction($dk, $fk);
         if ($fiction) {
             $cache = Yii::$app->cache;
@@ -65,7 +65,7 @@ class FicController extends BaseController
                     //todo 处理查找失败
                 }
                 if ($content) {
-                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_url_'.$url.'_detail', $content, Yii::$app->params['fiction_caption_detail']);
+                    $cache->set('ditch_'.$dk.'_fiction_'.$fk.'_url_'.$url.'_detail', $content, Yii::$app->params['fiction_chapter_detail']);
                 }
             } else {
                 $content = $fictionDetail;
@@ -76,7 +76,7 @@ class FicController extends BaseController
             return $this->render('detail', [
                 'content' => $content,
                 'fiction' => $fiction,
-                'captionName' => $captionName,
+                'chapterName' => $chapterName,
                 'dk' => $dk,
                 'fk' => $fk,
                 'url' => $url,

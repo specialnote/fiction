@@ -19,12 +19,13 @@ use yii\db\ActiveRecord;
  * @property int $authorNum
  * @property string $descriptionRule
  * @property int $descriptionNum
- * @property string $captionRule
+ * @property string $chapterRule
  * @property string $detailRule
- * @property string $captionLinkType 章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
+ * @property string $chapterLinkType 章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
  */
 class Ditch extends ActiveRecord
 {
+    const TYPE_FICTION = 1;//普通小说
     /**
      * {@inheritdoc}
      */
@@ -43,7 +44,7 @@ class Ditch extends ActiveRecord
             [['url'], 'string', 'max' => 100],
             [['name'], 'string', 'max' => 50],
             [['ditchKey'], 'string', 'max' => 80],
-            [['titleRule', 'authorRule', 'descriptionRule', 'captionRule', 'detailRule', 'captionLinkType'], 'string', 'max' => 30],
+            [['titleRule', 'authorRule', 'descriptionRule', 'chapterRule', 'detailRule', 'chapterLinkType'], 'string', 'max' => 30],
         ];
     }
 
@@ -65,9 +66,9 @@ class Ditch extends ActiveRecord
             'authorNum' => 'Author Num',
             'descriptionRule' => 'Description Rule',
             'descriptionNum' => 'Description Num',
-            'captionRule' => 'Caption Rule',
+            'chapterRule' => 'chapter Rule',
             'detailRule' => 'Detail Rule',
-            'captionLinkType' => 'Caption Link Type', //章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
+            'chapterLinkType' => 'chapter Link Type', //章节列表链接类型。current是相对小说页面的相对地址；home即相对于渠道主页的地址
         ];
     }
 
@@ -85,7 +86,7 @@ class Ditch extends ActiveRecord
             if (!$ditch_key) {
                 continue;
             }
-            $ditch = self::find()->where(['ditchKey' => $v['ditch_key']])->one();
+            $ditch = self::find()->where(['ditchKey' => $ditch_key])->one();
             if (!$ditch) {
                 $ditch = new self();
             }
@@ -103,7 +104,6 @@ class Ditch extends ActiveRecord
      */
     private function configureDitch($config)
     {
-        //todo 更新渠道
         if (isset($config['ditch_name']) && isset($config['ditch_key']) && isset($config['ditch_home_url'])) {
             $this->ditchKey = $config['ditch_key'];
             $this->name = $config['ditch_name'];
@@ -114,9 +114,11 @@ class Ditch extends ActiveRecord
             $this->authorNum = $config['author_rule_num'];
             $this->descriptionRule = $config['description_rule'];
             $this->descriptionNum = $config['description_rule_num'];
-            $this->captionRule = $config['caption_list_rule'];
-            $this->captionLinkType = $config['caption_list_type'];
+            $this->chapterRule = $config['chapter_list_rule'];
+            $this->chapterLinkType = $config['chapter_list_type'];
             $this->detailRule = $config['fiction_detail_rule'];
+            $this->status = 1;
+            $this->type = Ditch::TYPE_FICTION;
         } else {
             throw new \Exception('缺少核心配置参数');
         }

@@ -92,17 +92,17 @@ class Category extends Model
      */
     public static function getFictionDetail($url, $ditch_key)
     {
-        $fictionInformationAndCaptionList = Gather::getFictionInformationAndCaptionList($url, $ditch_key);
-        $fiction_information = $fictionInformationAndCaptionList['fiction_information'];
-        $fiction_caption_list = $fictionInformationAndCaptionList['fiction_caption_list'];
+        $fictionInformationAndChapterList = Gather::getFictionInformationAndChapterList($url, $ditch_key);
+        $fiction_information = $fictionInformationAndChapterList['fiction_information'];
+        $fiction_chapter_list = $fictionInformationAndChapterList['fiction_chapter_list'];
         if (!isset($fiction_information['fiction_key'])) {
             throw new Exception();
         }
         $fiction_key = $fiction_information['fiction_key'];
         $cache = Yii::$app->cache;
         //缓存小说信息
-        $captionConfig = $cache->get('ditch_'.$ditch_key.'_fiction_'.$fiction_key.'_config');
-        if (!$captionConfig) {
+        $chapterConfig = $cache->get('ditch_'.$ditch_key.'_fiction_'.$fiction_key.'_config');
+        if (!$chapterConfig) {
             $cache->set(
                 'ditch_'.$ditch_key.'_fiction_'.$fiction_key.'_config', $fiction_information, Yii::$app->params['fiction_configure_cache_expire_time']
             );
@@ -118,7 +118,7 @@ class Category extends Model
             'fiction_key' => $fiction_key,
             'author' => $fiction_information['fiction_author'],
             'description' => $fiction_information['fiction_introduction'],
-            'list' => $fiction_caption_list,
+            'list' => $fiction_chapter_list,
         ];
     }
 }

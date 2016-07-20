@@ -43,10 +43,10 @@ class Ditch
      *
      * @return array
      */
-    public function getFictionCaptionListRule()
+    public function getFictionChapterListRule()
     {
-        if (isset(\Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_caption_list_rule'])) {
-            return \Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_caption_list_rule'];
+        if (isset(\Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_chapter_list_rule'])) {
+            return \Yii::$app->params['ditch'][$this->ditch_key]['fiction_rule']['fiction_chapter_list_rule'];
         } else {
             return [];
         }

@@ -122,20 +122,20 @@ class Fiction extends ActiveRecord
     //更新所有小说的章节列表
     public static function updateFictionChapterList()
     {
-        $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch')->limit(1)->all();
+        $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch')->all();
         foreach ($fictions as $fiction) {
             $url = $fiction->url;
             $ditch = $fiction->ditch;
             if ($ditch) {
-                $captionLinkType = $ditch->captionLinkType;
-                if ($captionLinkType === 'current') {
+                $chapterLinkType = $ditch->chapterLinkType;
+                if ($chapterLinkType === 'current') {
                     $refUrl = rtrim($url, '/') . '/';
-                } elseif ($captionLinkType === 'home') {
+                } elseif ($chapterLinkType === 'home') {
                     $refUrl = $ditch->url;
                 } else {
                     $refUrl = '';
                 }
-                $detail = Gather::getFictionInformationAndCaptionList($url, $ditch, $refUrl);
+                $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl);
                 if ($detail) {
                     if ($detail['author']) {
                         $fiction->author = $detail['author'];
@@ -147,8 +147,7 @@ class Fiction extends ActiveRecord
                         $chapter = new Chapter();
                         $chapter->initChapter($fiction);
                         $chapter->createTable();
-                        var_dump($chapter->hasTable());die;
-                        if ($chapter->hasTable) {
+                        if ($chapter->hasTable()) {
                             $chapter->updateFictionChapter($detail['list']);
                         } else {
                             //todo 记录日志 没有数据表

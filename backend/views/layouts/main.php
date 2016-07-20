@@ -35,7 +35,7 @@ AppAsset::register($this);
         ],
     ]);
     $categoryList = \frontend\models\Category::getDitchCategoryList();
-    foreach($categoryList as $category) {
+    foreach ($categoryList as $category) {
         $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
     }
     echo Nav::widget([

@@ -24,15 +24,15 @@ class Fiction extends Model
         $fiction = self::getFiction($ditch_key, $fiction_key);
         if ($fiction) {
             $client = new Client();
-            $crawler = $client->request('GET', $fiction['fiction_caption_url']);
+            $crawler = $client->request('GET', $fiction['fiction_chapter_url']);
             try {
                 if ($crawler) {
-                    $a = $crawler->filter($fiction['fiction_caption_list_rule']);
+                    $a = $crawler->filter($fiction['fiction_chapter_list_rule']);
                     if ($a && count($a) > 0) {
                         $href = $a->eq(0)->attr('href');
                         if ($href) {
-                            if ($fiction['fiction_caption_list_type'] == 'current') {
-                                $url = rtrim($fiction['fiction_caption_url'], '/').'/'.$href;
+                            if ($fiction['fiction_chapter_list_type'] == 'current') {
+                                $url = rtrim($fiction['fiction_chapter_url'], '/').'/'.$href;
                             } else {
                                 //todo 其他渠道不同情况处理
                                 $url = $href;
@@ -74,18 +74,18 @@ class Fiction extends Model
             $list = $cache->get('ditch_'.$ditch_key.'_fiction_detail'.$fiction_key.'_fiction_list');
             if ($list === false || empty($list)) {
                 $client = new Client();
-                $crawler = $client->request('GET', $fiction['fiction_caption_url']);
+                $crawler = $client->request('GET', $fiction['fiction_chapter_url']);
                 try {
                     if ($crawler) {
-                        $a = $crawler->filter($fiction['fiction_caption_list_rule']);
+                        $a = $crawler->filter($fiction['fiction_chapter_list_rule']);
                         if ($a && count($a) > 0) {
                             global $array;
                             $a->each(function ($node) use ($array, $fiction) {
                                 global $array;
                                 if ($node) {
                                     $href = $node->attr('href');
-                                    if ($fiction['fiction_caption_list_type'] == 'current') {
-                                        $url = base64_encode(rtrim($fiction['fiction_caption_url'], '/').'/'.$href);
+                                    if ($fiction['fiction_chapter_list_type'] == 'current') {
+                                        $url = base64_encode(rtrim($fiction['fiction_chapter_url'], '/').'/'.$href);
                                     } else {
                                         $url = $href;
                                     }
@@ -211,8 +211,8 @@ class Fiction extends Model
         $cache = Yii::$app->cache;
         $fictionInformation = $cache->get('ditch_'.$ditch_key.'_fiction_'.$url.'_config');
         if (!$fictionInformation) {
-            $fictionInformationCaptionList = Gather::getFictionInformationAndCaptionList($ditch_key, $url);
-            $fictionInformation = $fictionInformationCaptionList['fictionInformation'];
+            $fictionInformationChapterList = Gather::getFictionInformationAndChapterList($ditch_key, $url);
+            $fictionInformation = $fictionInformationChapterList['fictionInformation'];
             $cache->set(
                 'ditch_'.$ditch_key.'_fiction_'.$fictionInformation['fiction_key'].'_config', $fictionInformation, Yii::$app->params['fiction_configure_cache_expire_time']
             );

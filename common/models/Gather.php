@@ -47,7 +47,7 @@ class Gather
     }
 
     //采集指定小说的 章节列表 以及 小说信息
-    public static function getFictionInformationAndCaptionList($url, Ditch $ditch, $chapterRule, $refUrl = '')
+    public static function getFictionInformationAndChapterList($url, Ditch $ditch, $refUrl = '')
     {
         $client = new Client();
         if ($url) {
@@ -61,7 +61,7 @@ class Gather
                 //获取小说章节列表
                 $list = [];
                 global $list;
-                $linkList = $crawler->filter($chapterRule);
+                $linkList = $crawler->filter($ditch->chapterRule);
                 $linkList->each(function ($node) use ($list, $refUrl) {
                     global $list;
                     if ($node) {
@@ -70,7 +70,7 @@ class Gather
                         if ($refUrl) {
                             $href = rtrim($refUrl, '/') . '/' . $href;
                         }
-                        $list[] = ['url' => base64_encode($href), 'text' => $text];
+                        $list[] = ['url' => $href, 'text' => $text];
                     }
                 });
             } catch (\Exception $e) {

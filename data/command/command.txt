@@ -1,0 +1,13 @@
+#更新渠道信息
+php yii ditch/update-ditch
+
+#更新分类信息
+php yii category/update-category
+
+#更新小说信息
+php yii fiction/update-fiction
+
+#更新小说章节列表
+php yii fiction/update-fiction-chapter-list
+
+

@@ -53,10 +53,10 @@ class Gather
     }
 
     //采集指定小说的 章节列表 以及 小说信息
-    public static function getFictionInformationAndCaptionList($ditch_key, $url)
+    public static function getFictionInformationAndChapterList($ditch_key, $url)
     {
         $ditch = new Ditch($ditch_key);
-        $rule = $ditch->getFictionCaptionListRule();//获取章节列表采集规则
+        $rule = $ditch->getFictionChapterListRule();//获取章节列表采集规则
         if ($ditch && $rule) {
             $client = new Client();
             if ($url) {
@@ -75,28 +75,28 @@ class Gather
                         'fiction_key' => $fiction_key,
                         'fiction_author' => $author,
                         'fiction_introduction' => $description,
-                        'fiction_caption_url' => $url,
-                        'fiction_caption_list_type' => 'current',
-                        'fiction_caption_list_rule' => '#list dl dd a',
+                        'fiction_chapter_url' => $url,
+                        'fiction_chapter_list_type' => 'current',
+                        'fiction_chapter_list_rule' => '#list dl dd a',
                     ];
 
                     //获取小说章节列表
                     $list = [];
                     global $list;
-                    $linkList = $crawler->filter($rule['fiction_caption_list_rule']);
+                    $linkList = $crawler->filter($rule['fiction_chapter_list_rule']);
                     $linkList->each(function ($node) use ($list, $rule, $url) {
                         global $list;
                         if ($node) {
                             $text = $node->text();
                             $href = $node->attr('href');
-                            if ($rule['fiction_caption_list_type'] === 'current') {
+                            if ($rule['fiction_chapter_list_type'] === 'current') {
                                 $href = rtrim($url, '/').'/'.$href;
                             }
                             $list[] = ['url' => base64_encode($href), 'text' => $text];
                         }
                     });
                     //返回小说详情
-                   $fiction_caption_list = $list;
+                   $fiction_chapter_list = $list;
                 } catch (Exception $e) {
                 }
             }
@@ -104,7 +104,7 @@ class Gather
 
         return [
             'fiction_information' => isset($fiction_information) ? $fiction_information : [],
-            'fiction_caption_list' => isset($fiction_caption_list) ? $fiction_caption_list : [],
+            'fiction_chapter_list' => isset($fiction_chapter_list) ? $fiction_chapter_list : [],
         ];
     }
 }

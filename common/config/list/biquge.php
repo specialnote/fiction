@@ -16,9 +16,9 @@ return [
                 'author_rule_num' => 0, //作者dom顺序
                 'description_rule' => '#intro', //小说描述规则
                 'description_rule_num' => 0, //小说描述dom顺序
-                'caption_list_rule' => '#list dl dd a', //小说章节列表规则
-                'caption_list_example' => 'href="7002428.html"', //小说章节列表url示例
-                'caption_list_type' => 'current', //表示列表用a链接做的，链接的地址是相对当前地址，需要拼接
+                'chapter_list_rule' => '#list dl dd a', //小说章节列表规则
+                'chapter_list_example' => 'href="7002428.html"', //小说章节列表url示例
+                'chapter_list_type' => 'current', //表示列表用a链接做的，链接的地址是相对当前地址，需要拼接
                 'fiction_detail_rule' => '#content', //销售详情内容
             ], //指定来源的采集规则
             'category_list' => [

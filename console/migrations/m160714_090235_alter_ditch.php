@@ -12,8 +12,8 @@ class m160714_090235_alter_ditch extends Migration
         $this->addColumn('{{%ditch}}', 'authorNum', $this->integer(1)->defaultValue(0));//作者dom顺序
         $this->addColumn('{{%ditch}}', 'descriptionRule', $this->string(30));
         $this->addColumn('{{%ditch}}', 'descriptionNum', $this->integer(1)->defaultValue(0));
-        $this->addColumn('{{%ditch}}', 'captionRule', $this->string(30));
-        $this->addColumn('{{%ditch}}', 'captionLinkType', $this->string());//章节列表链接类型。current，是相对小说页面的相对地址；home,即相对于渠道主页的地址
+        $this->addColumn('{{%ditch}}', 'chapterRule', $this->string(30));
+        $this->addColumn('{{%ditch}}', 'chapterLinkType', $this->string());//章节列表链接类型。current，是相对小说页面的相对地址；home,即相对于渠道主页的地址
         $this->addColumn('{{%ditch}}', 'detailRule', $this->string(30));//小说详情采集规则
     }
 

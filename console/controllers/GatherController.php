@@ -7,5 +7,4 @@ use yii\console\Controller;
 
 class GatherController extends Controller
 {
-
 }
