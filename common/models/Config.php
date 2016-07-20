@@ -90,7 +90,6 @@ class Config
         } else {
             throw new \Exception('没有找到渠道配置');
         }
-        //var_dump($res['biquge']);die;
         return $res;
     }
 }

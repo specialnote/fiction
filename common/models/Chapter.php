@@ -4,6 +4,7 @@ namespace common\models;
 
 
 use yii\base\Model;
+use Yii;
 
 class Chapter extends Model
 {
@@ -13,37 +14,68 @@ class Chapter extends Model
     public $list;
     public $fictionId;
 
-    private function initChapter(Fiction $fiction)
+    public function initChapter(Fiction $fiction)
     {
         $this->ditchKey = $fiction->ditchKey;
         $this->fictionKey = $fiction->fictionKey;
         $this->fictionId = $fiction->id;
-        $this->tableName = $this->ditchKey . '_' . $this->fictionKey;
-        $this->createTable();
+        $this->tableName = 'chapter_' . $this->ditchKey . '_' . $this->fictionKey;
         return $this;
     }
 
-    private function createTable()
+    //动态添加表
+    public function createTable()
     {
-        //todo 新建数据表
+        if (!$this->hasTable && $this->tableName) {
+            $sql = "
+CREATE TABLE IF NOT EXISTS ".$this->tableName."(
+	id INT(10) PRIMARY KEY,
+	ditchKey VARCHAR(50),
+	fictionKey VARCHAR(50),
+	chapter VARCHAR(100),
+	url VARCHAR(100)
+)
+";
+            Yii::$app->db->createCommand($sql)->execute();
+        }
     }
 
+    public function hasTable()
+    {
+        $sql = "SHOW DATABASES";
+        $res = Yii::$app->db->createCommand($sql)->execute();
+        var_dump($res);
+    }
+
+    //获取指定渠道指定小说的章节列表
     public function getList()
     {
-        //todo 从数据库中获取所有列表
-        $list = [];
-        $this->list = $list;
-        return $this->list;
+        if ($this->ditchKey && $this->fictionKey && $this->tableName) {
+            $sql = "SELECT chapter, url FROM :tableName ORDER BY id DESC";
+            $list = Yii::$app->db->createCommand($sql, ['tableName', $this->tableName])->queryAll();
+        } else {
+            $list = [];
+        }
+        return $list;
     }
 
-    public function findById($fictionId, $chapterId)
-    {
-        //todo 从数据库获取数据
-        //todo 返回对象
-    }
-
+    //将章节列表保存到数据库
     public function updateFictionChapter($list)
     {
-        //todo 更新章节列表 根据数据库中记录数
+        if ($this->ditchKey && $this->fictionKey && $this->tableName) {
+            $data = "";
+            foreach ($list as $k => $v) {
+                if ($v['text'] && $v['url']) {
+                    $data .= "('" . ($k + 1) . "','" . $v['text'] . "','" . $v['ur'] . "''),";
+                }
+            }
+            $data = rtrim($data, ',');
+            $sql = "INSERT INTO :tableName (listNum, chapter, url) VALUES :data";
+            $res = Yii::$app->db->createCommand($sql, ['tableName' => $this->tableName, 'data' => $data])->execute();
+            if ($res) {
+                return true;
+            }
+        }
+        return false;
     }
 }

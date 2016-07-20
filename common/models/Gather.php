@@ -3,7 +3,6 @@
 namespace common\models;
 
 use Goutte\Client;
-use Overtrue\Pinyin\Pinyin;
 
 class Gather
 {
@@ -58,6 +57,7 @@ class Gather
                 $author = $crawler->filter($ditch->authorRule)->eq($ditch->authorNum)->text();
                 $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
                 $description = $crawler->filter($ditch->descriptionRule)->eq($ditch->descriptionNum)->text();
+                $description = trim($description);
                 //获取小说章节列表
                 $list = [];
                 global $list;
@@ -74,6 +74,7 @@ class Gather
                     }
                 });
             } catch (\Exception $e) {
+                //todo 采集失败 记录日志 日后重复采集
             }
         }
 

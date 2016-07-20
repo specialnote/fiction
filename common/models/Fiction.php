@@ -104,7 +104,7 @@ class Fiction extends ActiveRecord
                                 $fiction->fictionKey = $fictionKey;
                                 $fiction->status = 1;
                             }
-                            $fiction->url = $url;
+                            $fiction->url = $v['url'];
                             $fiction->name = $v['text'];
                             $res = $fiction->save();
                             if (!$res) {
@@ -119,9 +119,10 @@ class Fiction extends ActiveRecord
         }
     }
 
-    public function updateFictionChapterList()
+    //更新所有小说的章节列表
+    public static function updateFictionChapterList()
     {
-        $fictions = Fiction::find()->where(['status' => 1])->joinWith('ditch')->all();
+        $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch')->limit(1)->all();
         foreach ($fictions as $fiction) {
             $url = $fiction->url;
             $ditch = $fiction->ditch;
@@ -143,7 +144,15 @@ class Fiction extends ActiveRecord
                         $fiction->description = $detail['description'];
                     }
                     if ($detail['list']) {
-
+                        $chapter = new Chapter();
+                        $chapter->initChapter($fiction);
+                        $chapter->createTable();
+                        var_dump($chapter->hasTable());die;
+                        if ($chapter->hasTable) {
+                            $chapter->updateFictionChapter($detail['list']);
+                        } else {
+                            //todo 记录日志 没有数据表
+                        }
                     }
                 }
             } else {
