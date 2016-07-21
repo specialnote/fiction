@@ -9,7 +9,6 @@ use yii\helpers\ArrayHelper;
 class Chapter extends Model
 {
     public $ditchKey;
-    public $fictionKey;
     public $tableName;
     public $list;
     public $fictionId;
@@ -17,9 +16,8 @@ class Chapter extends Model
     public function initChapter(Fiction $fiction)
     {
         $this->ditchKey = $fiction->ditchKey;
-        $this->fictionKey = $fiction->fictionKey;
         $this->fictionId = $fiction->id;
-        $this->tableName = 'chapter_' . $this->ditchKey . '_' . $this->fictionKey;
+        $this->tableName = 'ditch_' . $this->ditchKey . '_fiction_' . $this->fictionId . '_chapter';
         return $this;
     }
 
@@ -28,10 +26,10 @@ class Chapter extends Model
     {
         if (!$this->hasTable() && $this->tableName) {
             $sql = "
-CREATE TABLE IF NOT EXISTS ".$this->tableName."(
+CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
 	id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	ditchKey VARCHAR(50),
-	fictionKey VARCHAR(50),
+	fictionId INT(10),
 	chapter VARCHAR(100),
 	url VARCHAR(100)
 )
@@ -51,9 +49,9 @@ CREATE TABLE IF NOT EXISTS ".$this->tableName."(
     //获取指定渠道指定小说的章节列表
     public function getList()
     {
-        if ($this->ditchKey && $this->fictionKey && $this->tableName) {
-            $sql = "SELECT chapter, url FROM :tableName ORDER BY id DESC";
-            $list = Yii::$app->db->createCommand($sql, ['tableName', $this->tableName])->queryAll();
+        if ($this->ditchKey && $this->fictionId && $this->tableName) {
+            $sql = "SELECT chapter, url FROM " . $this->tableName . " ORDER BY id DESC";
+            $list = Yii::$app->db->createCommand($sql)->queryAll();
         } else {
             $list = [];
         }
@@ -63,18 +61,23 @@ CREATE TABLE IF NOT EXISTS ".$this->tableName."(
     //将章节列表保存到数据库
     public function updateFictionChapter($list)
     {
-        if ($this->ditchKey && $this->fictionKey && $this->tableName && $this->hasTable()) {
-            $data = "";
+        if ($this->ditchKey && $this->fictionId && $this->tableName && $this->hasTable()) {
+            $id = Yii::$app->db->createCommand("SELECT MAX(id) FROM " . $this->tableName)->queryScalar();
+            $id = intval($id);
+            $data = [];
+            //增量更新列表
             foreach ($list as $k => $v) {
-                if ($v['text'] && $v['url']) {
-                    $data .= "('" . $this->ditchKey . "','".$this->fictionKey."','". $v['text'] . "','" . $v['url'] . "'),";
+                if ($k + 1 > $id) {
+                    if ($v['text'] && $v['url']) {
+                        $data[] = [$this->ditchKey, $this->fictionId, $v['text'], $v['url']];
+                    }
                 }
             }
-            $data = rtrim($data, ',');
-            $sql = "INSERT INTO ".$this->tableName." (ditchKey, fictionKey, chapter, url) VALUES $data";
-            $res = Yii::$app->db->createCommand($sql)->execute();
-            if ($res) {
-                return true;
+            if ($data) {
+                $res = Yii::$app->db->createCommand()->batchInsert($this->tableName, ['ditchKey', 'fictionId', 'chapter', 'url'], $data)->execute();
+                if ($res) {
+                    return true;
+                }
             }
         }
         return false;

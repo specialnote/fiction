@@ -79,6 +79,7 @@ class Gather
         }
 
         return [
+            'ditchKey' => $ditch->ditchKey,
             'author' => isset($author) ? $author : '',
             'description' => isset($description) ? $description : '',
             'list' => isset($list) ? $list : [],

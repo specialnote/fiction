@@ -18,11 +18,18 @@ class FictionController extends Controller
     {
         Fiction::updateFictionWithCache();
     }
-    
+
     //更新指定小说的章节列表
     public function actionUpdateFictionChapterList()
     {
-        Fiction::updateFictionChapterList();
+        @ini_set('memory_limit', '256M');
+        $count = Fiction::find()->where(['status' => 1])->count();
+        if ($count > 0) {
+            for ($i = 1; $i <= ceil($count / 10); $i++) {
+                Fiction::updateFictionChapterList($i * 10);
+            }
+        }
+
     }
 
 

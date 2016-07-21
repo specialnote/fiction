@@ -122,7 +122,7 @@ class Fiction extends ActiveRecord
         }
     }
 
-    //从缓存中读取数据并更新小说数据库
+    //从缓存中读取数据并更新小说数据库（定时任务,每月执行一次）
     public static function updateFictionWithCache()
     {
         $cache = \Yii::$app->cache;
@@ -137,7 +137,7 @@ class Fiction extends ActiveRecord
                     $fiction = [];
                     foreach ($list as $v) {
                         if ($v['text'] && $v['url'] && !in_array($v['text'], $fiction)) {
-                            $data[] = [$ditchKey, $categoryKey, $v['text'],  $v['url'], 1];
+                            $data[] = [$ditchKey, $categoryKey, $v['text'], $v['url'], 1];
                         }
                         $fiction[] = $v['text'];
                     }
@@ -149,14 +149,14 @@ class Fiction extends ActiveRecord
                         //之后更新
                         $text = ArrayHelper::getColumn($fiction, 'name');
                         foreach ($data as $v) {
-                            if (in_array($v['text'], $text)){
+                            if (in_array($v['text'], $text)) {
                                 continue;
                             }
                             $model = new Fiction([
                                 'ditchKey' => $ditchKey,
                                 'categoryKey' => $categoryKey,
-                                'name' => $v['text'],
-                                'url' => $v['url'],
+                                'name' => trim($v['text']),
+                                'url' => trim($v['url']),
                                 'status' => 1,
                             ]);
                             $model->save();
@@ -166,16 +166,16 @@ class Fiction extends ActiveRecord
                     //todo 记录日志 从缓存中拿小说信息失败
                 }
             }
-            //$cache->delete('cache_category_fiction_list');
+            $cache->delete('cache_category_fiction_list');
         }
     }
 
-    //更新所有小说的章节列表
-    public static function updateFictionChapterList()
+    //更新所有小说的章节列表，放入缓存
+    public static function updateFictionChapterList($limit = 10)
     {
-        @ini_set('memory_limit', '256M');
-        //todo 想办法提高效率（几千张表，每张表几万条数据，循环效率太低、占用资源太多了。暂时思路，把采集和查库分开）
-        $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch')->all();
+        $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch');
+        $fictions = $fictions->limit($limit)->all();
+        $fictionList = [];
         foreach ($fictions as $fiction) {
             $url = $fiction->url;
             $ditch = $fiction->ditch;
@@ -189,26 +189,43 @@ class Fiction extends ActiveRecord
                     $refUrl = '';
                 }
                 $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl);
-                if ($detail) {
-                    if ($detail['author']) {
-                        $fiction->author = $detail['author'];
-                    }
-                    if ($detail['description']) {
-                        $fiction->description = $detail['description'];
-                    }
-                    if ($detail['list']) {
-                        $chapter = new Chapter();
-                        $chapter->initChapter($fiction);
-                        $chapter->createTable();
-                        if ($chapter->hasTable()) {
-                            $chapter->updateFictionChapter($detail['list']);
-                        } else {
-                            //todo 记录日志 没有数据表
-                        }
-                    }
-                }
+                $fictionList[$fiction->id] = $detail;
             } else {
                 //todo 记录日志 没有找到指定小说的渠道
+            }
+        }
+        //缓存所有小说的章节列表
+        if ($fictionList) {
+            $cache = \Yii::$app->cache;
+            if ($cache->exists('fiction_chapter_list')) {
+                $list = $cache->get('fiction_chapter_list');
+                $fictionList = array_merge($list, $fictionList);
+            }
+            $cache->set('fiction_chapter_list', $fictionList, 60 * 60 * 24 * 7);
+        }
+    }
+
+    //根据缓存内容，更新小说章节列表
+    public static function updateFictionChapterListWithCache()
+    {
+        $detail = [];
+        $fiction = new Fiction();
+        if ($detail) {
+            if ($detail['author']) {
+                $fiction->author = $detail['author'];
+            }
+            if ($detail['description']) {
+                $fiction->description = $detail['description'];
+            }
+            if ($detail['list']) {
+                $chapter = new Chapter();
+                $chapter->initChapter($fiction);
+                $chapter->createTable();
+                if ($chapter->hasTable()) {
+                    $chapter->updateFictionChapter($detail['list']);
+                } else {
+                    //todo 记录日志 没有数据表
+                }
             }
         }
     }
