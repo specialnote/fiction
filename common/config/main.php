@@ -9,5 +9,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
     ],
 ];

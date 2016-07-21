@@ -7,10 +7,16 @@ use yii\console\Controller;
 
 class FictionController extends Controller
 {
-    //定时任务，更新所有分类的小说信息
+    //定时任务，更新所有分类的小说信息，将小说信息缓存
     public function actionUpdateFiction()
     {
         Fiction::updateCategoryFictionList();
+    }
+
+    //根据缓存信息更新数据库
+    public function actionUpdateFictionWithCache()
+    {
+        Fiction::updateFictionWithCache();
     }
     
     //更新指定小说的章节列表
@@ -18,4 +24,6 @@ class FictionController extends Controller
     {
         Fiction::updateFictionChapterList();
     }
+
+
 }

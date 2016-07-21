@@ -5,6 +5,7 @@ namespace common\models;
 use Overtrue\Pinyin\Pinyin;
 use yii\db\ActiveRecord;
 use common\models\Ditch;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%fiction}}".
@@ -61,14 +62,28 @@ class Fiction extends ActiveRecord
         ];
     }
 
+    public function getFictionKey()
+    {
+        if ($this->fictionKey) {
+            return $this->fictionKey;
+        }
+        if ($this->name) {
+            $pinyin = new Pinyin();
+            $this->fictionKey = implode($pinyin->convert($this->name));
+            $this->save(false);
+            return $this->fictionKey;
+        }
+        return null;
+    }
+
     /**
      * 更新所有分类的小说信息.
      */
     public static function updateCategoryFictionList()
     {
+        @ini_set('memory_limit', '256M');
         //获取所有分类
         $categories = Category::find()->all();
-        $pinyin = new Pinyin();
         foreach ($categories as $category) {
             $ditchKey = $category->ditchKey;
             $categoryKey = $category->categoryKey;
@@ -92,36 +107,74 @@ class Fiction extends ActiveRecord
                     $refUrl = '';
                 }
                 $fictionList = Gather::gatherCategoryFictionList($url, $categoryRule, $fictionRule, $categoryNum, $refUrl);
-                if ($fictionList) {
-                    foreach ($fictionList as $v) {
-                        if ($v['url'] && $v['text']) {
-                            $fictionKey = implode($pinyin->convert($v['text']));
-                            $fiction = self::find()->where(['ditchKey' => $ditchKey, 'fictionKey' => $fictionKey])->one();
-                            if (null === $fiction) {
-                                $fiction = new self();
-                                $fiction->ditchKey = $ditchKey;
-                                $fiction->categoryKey = $categoryKey;
-                                $fiction->fictionKey = $fictionKey;
-                                $fiction->status = 1;
-                            }
-                            $fiction->url = $v['url'];
-                            $fiction->name = $v['text'];
-                            $res = $fiction->save();
-                            if (!$res) {
-                                //todo 添加日志 更新小说信息失败
-                            }
-                        }
-                    }
-                }
+                $cacheFictionList = ['ditchKey' => $ditchKey, 'categoryKey' => $categoryKey, 'list' => $fictionList];
             } else {
                 //todo 记录日志 分类缺少必要信息
             }
+        }
+        //将分类的小说列表缓存下来
+        if (isset($cacheFictionList) && count($cacheFictionList)) {
+            $cache = \Yii::$app->cache;
+            if ($cache->exists('cache_category_fiction_list')) {
+                $cache->delete('cache_category_fiction_list');
+            }
+            $cache->set('cache_category_fiction_list', $cacheFictionList, 60 * 60 * 24 * 7);
+        }
+    }
+
+    //从缓存中读取数据并更新小说数据库
+    public static function updateFictionWithCache()
+    {
+        $cache = \Yii::$app->cache;
+        if ($cache->exists('cache_category_fiction_list')) {
+            $cacheFictionList = $cache->get('cache_category_fiction_list');
+            if ($cacheFictionList) {
+                $ditchKey = $cacheFictionList['ditchKey'];
+                $categoryKey = $cacheFictionList['categoryKey'];
+                $list = $cacheFictionList['list'];
+                if ($ditchKey && $categoryKey && $list) {
+                    $data = [];
+                    $fiction = [];
+                    foreach ($list as $v) {
+                        if ($v['text'] && $v['url'] && !in_array($v['text'], $fiction)) {
+                            $data[] = [$ditchKey, $categoryKey, $v['text'],  $v['url'], 1];
+                        }
+                        $fiction[] = $v['text'];
+                    }
+                    $fiction = Fiction::find()->where(['ditchKey' => $ditchKey])->all();
+                    if (count($fiction) === 0 && count($data)) {
+                        //初始化数据
+                        \Yii::$app->db->createCommand()->batchInsert('fiction', ['ditchKey', 'categoryKey', 'name', 'url', 'status'], $data)->execute();
+                    } else {
+                        //之后更新
+                        $text = ArrayHelper::getColumn($fiction, 'name');
+                        foreach ($data as $v) {
+                            if (in_array($v['text'], $text)){
+                                continue;
+                            }
+                            $model = new Fiction([
+                                'ditchKey' => $ditchKey,
+                                'categoryKey' => $categoryKey,
+                                'name' => $v['text'],
+                                'url' => $v['url'],
+                                'status' => 1,
+                            ]);
+                            $model->save();
+                        }
+                    }
+                } else {
+                    //todo 记录日志 从缓存中拿小说信息失败
+                }
+            }
+            //$cache->delete('cache_category_fiction_list');
         }
     }
 
     //更新所有小说的章节列表
     public static function updateFictionChapterList()
     {
+        @ini_set('memory_limit', '256M');
+        //todo 想办法提高效率（几千张表，每张表几万条数据，循环效率太低、占用资源太多了。暂时思路，把采集和查库分开）
         $fictions = Fiction::find()->where(['fiction.status' => 1])->joinWith('ditch')->all();
         foreach ($fictions as $fiction) {
             $url = $fiction->url;
