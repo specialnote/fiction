@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
         }
     }
 
+    //指定渠道已经创建表了
     public function hasTable()
     {
         $sql = "SHOW TABLES";
@@ -49,8 +50,8 @@ CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
     //获取指定渠道指定小说的章节列表
     public function getList()
     {
-        if ($this->ditchKey && $this->fictionId && $this->tableName) {
-            $sql = "SELECT chapter, url FROM " . $this->tableName . " ORDER BY id DESC";
+        if ($this->hasTable()) {
+            $sql = "SELECT chapter AS text, url FROM " . $this->tableName . " ORDER BY id ASC";
             $list = Yii::$app->db->createCommand($sql)->queryAll();
         } else {
             $list = [];
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
     //将章节列表保存到数据库
     public function updateFictionChapter($list)
     {
-        if ($this->ditchKey && $this->fictionId && $this->tableName && $this->hasTable()) {
+        if ($this->hasTable()) {
             $id = Yii::$app->db->createCommand("SELECT MAX(id) FROM " . $this->tableName)->queryScalar();
             $id = intval($id);
             $data = [];
