@@ -2,7 +2,8 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Category;
+use common\models\Category;
+use common\models\Fiction;
 use yii\data\Pagination;
 
 class CategoryController extends BaseController
@@ -10,37 +11,19 @@ class CategoryController extends BaseController
     /**
      *分类小说列表页.
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
-        $dk = $this->get('dk');
-        $dk = $dk ?: $this->ditch_key;
-        $ck = $this->get('ck');
-        //获取分类配置
-        $category = Category::getDitchCategory($dk, $ck);
-        //获取分类的小说列表
-        $fictionList = Category::getDitchCategoryFictionList($dk, $ck);
+        $category = Category::findOne($id);
+        $query = Fiction::find()->where(['ditchKey' => $this->ditchKey, 'categoryKey' => $category->categoryKey]);
         $pages = new Pagination([
-            'totalCount' => count($fictionList),
-            'pageSize' => 100,
+            'totalCount' => $query->count(),
+            'pageSize' => 30
         ]);
-        $fictionList = array_slice($fictionList, $pages->offset, $pages->pageSize);
-
+        $fictionList = $query->offset($pages->offset)->limit($pages->limit)->all();
         return $this->render('index', [
-           'fictionList' => $fictionList,
-            'dk' => $dk,
-            'ck' => $ck,
             'category' => $category,
+            'fictionList' => $fictionList,
             'pages' => $pages,
         ]);
-    }
-
-    //根据分类小说列表进入指定小说章节页面
-    public function actionDetail()
-    {
-        $dk = $this->get('dk');
-        $dk = $dk ?: $this->ditch_key;
-        $url = base64_decode($this->get('url'));
-
-        return $this->redirect('/fic/list?dk='.$dk.'&url='.base64_encode($url));
     }
 }
