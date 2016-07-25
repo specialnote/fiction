@@ -47,33 +47,37 @@ class Gather
     }
 
     //采集指定小说的 章节列表 以及 小说信息
-    public static function getFictionInformationAndChapterList($url, Ditch $ditch, $refUrl = '')
+    public static function getFictionInformationAndChapterList($url, Ditch $ditch, $refUrl = '', $getList = true, $getInfo = true)
     {
         $client = new Client();
         if ($url) {
             $crawler = $client->request('GET', $url);
             try {
-                //获取小说信息
-                $author = $crawler->filter($ditch->authorRule)->eq($ditch->authorNum)->text();
-                $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
-                $description = $crawler->filter($ditch->descriptionRule)->eq($ditch->descriptionNum)->text();
-                $description = trim($description);
-                var_dump($description);die;
-                //获取小说章节列表
-                $list = [];
-                global $list;
-                $linkList = $crawler->filter($ditch->chapterRule);
-                $linkList->each(function ($node) use ($list, $refUrl) {
+                if ($getInfo) {
+                    //获取小说信息
+                    $author = $crawler->filter($ditch->authorRule)->eq($ditch->authorNum)->text();
+                    $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
+                    $author = trim($author);
+                    $description = $crawler->filter($ditch->descriptionRule)->eq($ditch->descriptionNum)->text();
+                    $description = trim($description);
+                }
+                if ($getList) {
+                    //获取小说章节列表
+                    $list = [];
                     global $list;
-                    if ($node) {
-                        $text = $node->text();
-                        $href = $node->attr('href');
-                        if ($refUrl) {
-                            $href = rtrim($refUrl, '/') . '/' . $href;
+                    $linkList = $crawler->filter($ditch->chapterRule);
+                    $linkList->each(function ($node) use ($list, $refUrl) {
+                        global $list;
+                        if ($node) {
+                            $text = $node->text();
+                            $href = $node->attr('href');
+                            if ($refUrl) {
+                                $href = rtrim($refUrl, '/') . '/' . $href;
+                            }
+                            $list[] = ['url' => $href, 'text' => $text];
                         }
-                        $list[] = ['url' => $href, 'text' => $text];
-                    }
-                });
+                    });
+                }
             } catch (\Exception $e) {
                 //todo 采集失败 记录日志 日后重复采集
             }

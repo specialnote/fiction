@@ -2,8 +2,7 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Category;
-use frontend\models\Fiction;
+use common\models\Fiction;
 use Goutte\Client;
 use yii\base\Exception;
 use yii\helpers\Html;
@@ -11,6 +10,24 @@ use Yii;
 
 class FicController extends BaseController
 {
+    public function actionIndex($id)
+    {
+        $fiction = Fiction::findOne($id);
+        if (!$fiction) {
+            $this->err404('没有找到指定小说');
+        }
+        if (!$fiction->author || !$fiction->description || !$fiction->fictionKey) {
+            $fiction = $fiction->getFunctionDetail();
+        }
+        if (!$fiction->author || !$fiction->description || !$fiction->fictionKey) {
+            //todo 记录日志 获取指定小说信息失败
+        }
+        $chapterList = $fiction->getChapterList();
+        return $this->render('index', [
+            'fiction' => $fiction,
+            'chapterList' => $chapterList,
+        ]);
+    }
     //小说章节目录页
     public function actionList()
     {

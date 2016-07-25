@@ -8,7 +8,7 @@
         <?php foreach ($fictionList as $fiction) {
     ?>
             <div class="col-xs-6 col-md-6">
-                <a href="/fiction/index?id=<?= $fiction->id?>"><?= $fiction->name?></a>
+                <a href="/fic/index?id=<?= $fiction->id?>"><?= $fiction->name?></a>
             </div>
         <?php 
 }?>
