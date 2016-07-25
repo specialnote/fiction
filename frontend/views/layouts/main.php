@@ -27,22 +27,25 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    NavBar::begin([
-        'brandLabel' => $this->headline,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $categoryList = \frontend\models\Category::getDitchCategoryList();
+    $categoryList = $this->categoryList;
     foreach ($categoryList as $category) {
-        $menuItems[] = ['label' => Html::encode($category['category_name']), 'url' => "/category/index?dk=$dk&ck=".Html::encode($category['category_key'])];
+        $menuItems[] = ['label' => Html::encode($category->name), 'url' => "/category/index?id=" . $category->id];
     }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
+
+    if (isset($menuItems) && $menuItems) {
+        NavBar::begin([
+            'brandLabel' => $this->headline,
+            'brandUrl' => Yii::$app->homeUrl,
+            'options' => [
+                'class' => 'navbar-inverse navbar-fixed-top',
+            ],
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right'],
+            'items' => $menuItems,
+        ]);
+        NavBar::end();
+    }
     ?>
 
     <div class="container">

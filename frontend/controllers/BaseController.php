@@ -2,13 +2,14 @@
 
 namespace frontend\controllers;
 
+use common\models\Ditch;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class BaseController extends Controller
 {
-    public $ditch_key = 'ditch';
+    public $ditchKey = 'biquge';
 
     public function err404($message = '')
     {
@@ -23,6 +24,29 @@ class BaseController extends Controller
             return Html::encode($content);
         }
 
-        return;
+        return null;
+    }
+
+    /**
+     * 获取指定渠道的小说分类
+     * @return mixed
+     */
+    public function getCategoryList()
+    {
+        $ditch = Ditch::find()->where(['ditchKey' => $this->ditchKey])->one();
+        if (!$ditch) {
+            $this->err404('没有找到指定的渠道');
+        }
+        return $ditch->getAllCategoryByDitch();
+    }
+
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            $this->view->categoryList = $this->getCategoryList();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -58,6 +58,7 @@ class Gather
                 $author = preg_replace('/\s*作.*?者\s*:?：?\s*/', '', $author);
                 $description = $crawler->filter($ditch->descriptionRule)->eq($ditch->descriptionNum)->text();
                 $description = trim($description);
+                var_dump($description);die;
                 //获取小说章节列表
                 $list = [];
                 global $list;

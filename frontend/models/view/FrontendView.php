@@ -7,4 +7,5 @@ use yii\web\View;
 class FrontendView extends View
 {
     public $headline;//大标题
+    public $categoryList;//小说列表
 }

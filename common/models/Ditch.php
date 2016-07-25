@@ -125,4 +125,14 @@ class Ditch extends ActiveRecord
 
         return $this;
     }
+
+    /**
+     * 获取指定渠道的所有分类
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getAllCategoryByDitch()
+    {
+        $category = Category::find()->where(['ditchKey' => $this->ditchKey])->all();
+        return $category;
+    }
 }

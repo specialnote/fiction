@@ -2,24 +2,14 @@
 
 namespace frontend\controllers;
 
+use common\models\Ditch;
 use frontend\models\Category;
 
 class SiteController extends BaseController
 {
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
     public function actionIndex()
     {
-        $dk = $this->ditch_key;
-        $categoryList = Category::getDitchCategoryList($dk);
-
-        return $this->render('index', [
-            'categoryList' => $categoryList,
-            'dk' => $dk,
-        ]);
+        return $this->render('index');
     }
 
     public function actionError()
