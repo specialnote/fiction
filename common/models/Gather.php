@@ -90,4 +90,26 @@ class Gather
             'list' => isset($list) ? $list : [],
         ];
     }
+
+    public static function getFictionDetail($url, $rule)
+    {
+        $content = '';
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
+        try {
+            if ($crawler) {
+                $detail = $crawler->filter($rule);
+                if ($detail) {
+                    $text = $detail->html();
+                    $text = preg_replace('/<script.*?>.*?<\/script>/', '', $text);
+                    $text = preg_replace('/(<br\s?\/?>){1,}/', '<br/><br/>', $text);
+                    $text = strip_tags($text, '<p><div><br>');
+                    $content = $content . $text;
+                }
+            }
+        } catch (\Exception $e) {
+            //todo 处理查找失败
+        }
+        return $content;
+    }
 }

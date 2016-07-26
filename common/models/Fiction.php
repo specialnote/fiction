@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Goutte\Client;
 use Overtrue\Pinyin\Pinyin;
 use yii\db\ActiveRecord;
 use common\models\Ditch;
@@ -112,7 +113,7 @@ class Fiction extends ActiveRecord
                     $fiction = Fiction::find()->select('name')->asArray()->all();
                     $text = ArrayHelper::getColumn($fiction, 'name');
                     foreach ($fictionList as $v) {
-                        if (in_array($v['text'], $text)){
+                        if (in_array($v['text'], $text)) {
                             continue;
                         }
                         $model = new Fiction([
@@ -225,5 +226,28 @@ class Fiction extends ActiveRecord
         ]);
         $list = $chapter->getList();
         return $list;
+    }
+
+    //获取指定章节详情
+    public function getDetail($num)
+    {
+        $key = 'ditch_' . $this->ditchKey . '_fiction_' . $this->id . '_chapter_' . $num;
+        $cache = \Yii::$app->cache;
+        $ditch = $this->getDitch();
+        $chapter = (new Chapter())->initChapter($this);
+        $list = $chapter->getChapter($num);
+        if ($cache->exists($key)) {
+            $content = $cache->get($key);
+        } else {
+            $content = '';
+            if ($list && $list['url']) {
+                $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
+                if ($content) {
+                    $cache->set($key, $content, 60 * 60 * 24);
+                }
+            }
+        }
+        $content = $content ?: '暂时没有找到指定章节数据';
+        return ['text' => $list['text'], 'detail' => $content];
     }
 }

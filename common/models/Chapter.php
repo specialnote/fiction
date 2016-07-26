@@ -83,4 +83,27 @@ CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
         }
         return false;
     }
+
+    //根据章节编号超找指定的章节信息
+    public function getChapter($num)
+    {
+        if ($this->hasTable()) {
+            $sql = "SELECT chapter AS text, url FROM " . $this->tableName . " WHERE id = " . $num;
+            return Yii::$app->db->createCommand($sql)->queryOne();
+        } else {
+            return [];
+        }
+    }
+
+    //获取指定小说的最大章节
+    public function getMaxNum()
+    {
+        if ($this->hasTable()) {
+            $sql = "SELECT MAX(id) FROM " . $this->tableName;
+            $res = Yii::$app->db->createCommand($sql)->queryScalar();
+        } else {
+            $res = 1;
+        }
+        return intval($res);
+    }
 }
