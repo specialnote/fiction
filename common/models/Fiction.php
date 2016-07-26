@@ -22,6 +22,8 @@ use yii\helpers\ArrayHelper;
  */
 class Fiction extends ActiveRecord
 {
+    public $list;//章节列表
+
     /**
      * {@inheritdoc}
      */
@@ -132,8 +134,8 @@ class Fiction extends ActiveRecord
         }
     }
 
-    //获取指定小说的章节列表
-    public function getFictionChapterList()
+    //获取指定小说的详细信息包括章节列表
+    public function getFunctionDetail()
     {
         $url = $this->url;
         $ditch = $this->getDitch();
@@ -146,18 +148,28 @@ class Fiction extends ActiveRecord
             } else {
                 $refUrl = '';
             }
-            $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl, true, false);
+            $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl, true, true);
             if ($detail) {
-                return $detail['list'];
+                if ($detail['author']) {
+                    $this->author = $detail['author'];
+                    $pinyin = new Pinyin();
+                    $this->fictionKey = implode($pinyin->convert($detail['author']));
+                }
+                if ($detail['description']) {
+                    $this->description = $detail['description'];
+                }
+                if ($detail['list']) {
+                    $this->list = $detail['list'];
+                }
             }
         } else {
             //todo 记录日志 没有找到指定小说的渠道
         }
-        return [];
+        return $this;
     }
 
-    //更新指定小说的章节列表
-    public function updateFictionList()
+    //更新指定小说的信息
+    public function updateFictionDetail()
     {
         $url = $this->url;
         $ditch = $this->getDitch();
@@ -170,8 +182,16 @@ class Fiction extends ActiveRecord
             } else {
                 $refUrl = '';
             }
-            $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl, true, false);
+            $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl, true, true);
             if ($detail) {
+                if ($detail['author']) {
+                    $this->author = $detail['author'];
+                    $pinyin = new Pinyin();
+                    $this->fictionKey = implode($pinyin->convert($detail['author']));
+                }
+                if ($detail['description']) {
+                    $this->description = $detail['description'];
+                }
                 if ($detail['list']) {
                     $chapter = new Chapter();
                     $chapter->initChapter($this);
@@ -188,40 +208,6 @@ class Fiction extends ActiveRecord
         }
     }
 
-    //获取指定小说的详细信息
-    public function getFunctionDetail()
-    {
-        $url = $this->url;
-        $ditch = $this->getDitch();
-        if ($ditch) {
-            $chapterLinkType = $ditch->chapterLinkType;
-            if ($chapterLinkType === 'current') {
-                $refUrl = rtrim($url, '/') . '/';
-            } elseif ($chapterLinkType === 'home') {
-                $refUrl = $ditch->url;
-            } else {
-                $refUrl = '';
-            }
-            $detail = Gather::getFictionInformationAndChapterList($url, $ditch, $refUrl, false, true);
-            if ($detail) {
-                if ($detail['author']) {
-                    $this->author = $detail['author'];
-                    $pinyin = new Pinyin();
-                    $this->fictionKey = implode($pinyin->convert($detail['author']));
-                }
-                if ($detail['description']) {
-                    $this->description = $detail['description'];
-                }
-                if ($this->author && $this->description) {
-                    $this->save();
-                }
-            }
-        } else {
-            //todo 记录日志 没有找到指定小说的渠道
-        }
-        return $this;
-    }
-
     public function getDitch()
     {
         return Ditch::findOne(['ditchKey' => $this->ditchKey]);
@@ -230,16 +216,14 @@ class Fiction extends ActiveRecord
     //获取当前小说的章节列表
     public function getChapterList()
     {
+        if ($this->list) {
+            return $this->list;
+        }
         $chapter = new Chapter([
             'ditchKey' => $this->ditchKey,
             'fictionId' => $this->id
         ]);
         $list = $chapter->getList();
-        if ($list){
-            return $list;
-        } else {
-            $list = $this->getFictionChapterList();
-            return $list;
-        }
+        return $list;
     }
 }

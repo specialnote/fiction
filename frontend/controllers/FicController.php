@@ -16,17 +16,26 @@ class FicController extends BaseController
         if (!$fiction) {
             $this->err404('没有找到指定小说');
         }
-        if (!$fiction->author || !$fiction->description || !$fiction->fictionKey) {
+        if (!$fiction->author || !$fiction->description || !$fiction->getChapterList()) {
             $fiction = $fiction->getFunctionDetail();
         }
-        if (!$fiction->author || !$fiction->description || !$fiction->fictionKey) {
-            //todo 记录日志 获取指定小说信息失败
+        if (!$fiction->author || !$fiction->description) {
+            $this->err404('没有找到指定小说数据');
         }
         $chapterList = $fiction->getChapterList();
         return $this->render('index', [
             'fiction' => $fiction,
             'chapterList' => $chapterList,
         ]);
+    }
+
+    //更新章节列表
+    public function actionUpdate($id)
+    {
+        $fiction = Fiction::findOne($id);
+        if ($fiction) {
+            $fiction->updateFictionDetail();
+        }
     }
     //小说章节目录页
     public function actionList()
