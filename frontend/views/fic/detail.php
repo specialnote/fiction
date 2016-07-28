@@ -57,7 +57,7 @@
         content.toggleClass('close_light_style');
     });
 
-
+    //获取上一章、下一章链接
     $.get('/fic/pn?fid=<?= $fiction->id ?>&num='+<?= $num ?>, function (data) {
         var prev = $('.detail_prev_url');
         var next = $('.detail_next_url');
@@ -72,5 +72,8 @@
             next.css({'background': '#ccc', 'border': '1px solid #ccc'});
         }
     });
+
+    //缓存当前详情
+    $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num ?>');
 </script>
 

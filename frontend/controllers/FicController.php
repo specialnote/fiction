@@ -39,6 +39,7 @@ class FicController extends BaseController
         }
     }
 
+    //获取章节详情
     public function actionDetail($fid, $num)
     {
         $fiction = Fiction::findOne($fid);
@@ -51,6 +52,16 @@ class FicController extends BaseController
             'detail' => $detail,
             'num' => $num,
         ]);
+    }
+
+    //缓存指定小说、指定章节详情
+    public function actionCache($fid, $num)
+    {
+        $fiction = Fiction::findOne($fid);
+        if (!$fiction) {
+            $this->err404('没有找到指定小说');
+        }
+        $fiction->cache($num);
     }
 
     //ajax获取上一章、下一章

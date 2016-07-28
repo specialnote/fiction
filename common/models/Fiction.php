@@ -250,4 +250,20 @@ class Fiction extends ActiveRecord
         $content = $content ?: '暂时没有找到指定章节数据';
         return ['text' => $list['text'], 'detail' => $content];
     }
+
+    //缓存指定章节详情
+    public function cache($num)
+    {
+        $key = 'ditch_' . $this->ditchKey . '_fiction_' . $this->id . '_chapter_' . $num;
+        $cache = \Yii::$app->cache;
+        $ditch = $this->getDitch();
+        $chapter = (new Chapter())->initChapter($this);
+        $list = $chapter->getChapter($num);
+        if ($list && $list['url']) {
+            $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
+            if ($content) {
+                $cache->set($key, $content, 60 * 60 * 24);
+            }
+        }
+    }
 }
