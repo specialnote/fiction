@@ -75,6 +75,6 @@
     });
 
     //缓存当前详情
-    $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num ?>');
+    $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num ?>);
 </script>
 
