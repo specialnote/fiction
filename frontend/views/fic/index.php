@@ -38,7 +38,6 @@
     <div class="col-xs-12 col-md-12">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default" role="button" id="sold_asc">正序</a>
-            <a class="btn btn-default" role="button" style="width: 5%">全部章节目录</a>
             <a class="btn btn-default" role="button" id="sold_desc">反序</a>
         </div>
     </div>
@@ -49,7 +48,7 @@
             <?php if($list) { ?>
                 <?php foreach ($list as $k => $v) { ?>
                     <li id="f_c_list_<?= $k?>" class="list-group-item" >
-                        <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= $k ?>"><?= $v['text']?></a>
+                        <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= $k + 1 ?>"><?= $v['text']?></a>
                     </li>
                 <?php }?>
             <?php } ?>

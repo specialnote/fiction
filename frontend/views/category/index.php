@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row" id="category_list">
         <?php foreach ($fictionList as $fiction) { ?>
-            <div class="col-xs-6 col-md-6 text-center">
+            <div class="col-xs-6 col-md-3 text-center">
                 <a href="/fic/index?id=<?= $fiction->id?>"><?= $fiction->name?></a>
             </div>
         <?php }?>
@@ -16,6 +16,8 @@
             <?= \yii\widgets\LinkPager::widget([
                 'pagination' => $pages,
                 'maxButtonCount' => 3,
+                'nextPageLabel' => '下',
+                'prevPageLabel' => '上'
             ])?>
         </div>
     </div>

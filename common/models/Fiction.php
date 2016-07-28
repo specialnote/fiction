@@ -193,6 +193,7 @@ class Fiction extends ActiveRecord
                 if ($detail['description']) {
                     $this->description = $detail['description'];
                 }
+                $this->save();
                 if ($detail['list']) {
                     $chapter = new Chapter();
                     $chapter->initChapter($this);
@@ -242,9 +243,6 @@ class Fiction extends ActiveRecord
             $content = '';
             if ($list && $list['url']) {
                 $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
-                if ($content) {
-                    $cache->set($key, $content, 60 * 60 * 24);
-                }
             }
         }
         $content = $content ?: '暂时没有找到指定章节数据';

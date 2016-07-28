@@ -17,7 +17,7 @@ class CategoryController extends BaseController
         $query = Fiction::find()->where(['ditchKey' => $this->ditchKey, 'categoryKey' => $category->categoryKey]);
         $pages = new Pagination([
             'totalCount' => $query->count(),
-            'pageSize' => 50
+            'pageSize' => 80
         ]);
         $fictionList = $query->offset($pages->offset)->limit($pages->limit)->all();
         return $this->render('index', [

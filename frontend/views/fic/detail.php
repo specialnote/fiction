@@ -4,10 +4,11 @@
 ?>
 <div class="row">
     <div class="col-xs-6 col-md-6">
-        字体
-        <a class="btn btn-default font_small" role="button">-</a>
-        <a class="btn btn-default font_big" role="button">+</a>
-        <a class="btn btn-default" id="close_light" role="button">关灯</a>
+        <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
+            <a class="btn btn-default font_small" role="button">-</a>
+            <a class="btn btn-default font_big" role="button">+</a>
+            <a class="btn btn-default" id="close_light" role="button">关灯</a>
+        </div>
     </div>
 </div>
 <div class="row">
