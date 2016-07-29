@@ -15,7 +15,7 @@ class m160728_141436_log extends Migration
             'model' => $this->string(20),
             'function' => $this->string(20),
             'work' => $this->string(100),
-            'note' => $this->string(100),
+            'note' => $this->text(),
             'created_at' => $this->timestamp(),
             'updated_at' => $this->timestamp(),
         ]);

@@ -99,7 +99,14 @@ class Fiction extends ActiveRecord
                 if ($fictionLinkType === 'home') {
                     $ditch = $category->ditch;
                     if (!$ditch) {
-                        //todo 记录日志 未找到指定小说的渠道
+                        $log = new Log([
+                            'type' => Log::LOG_TYPE_CONFIG,
+                            'model' => Fiction::class,
+                            'function' => __FUNCTION__,
+                            'work' => '根据分类查找对应的渠道',
+                            'note' => serialize($category),
+                        ]);
+                        $log->save();
                         continue;
                     }
                     $refUrl = $ditch->url;
@@ -127,10 +134,24 @@ class Fiction extends ActiveRecord
                         $text[] = $v['text'];
                     }
                 } else {
-                    //todo 记录日志 从缓存中拿小说信息失败
+                    $log = new Log([
+                        'type' => Log::LOG_TYPE_GATHER,
+                        'model' => Fiction::class,
+                        'function' => __FUNCTION__,
+                        'work' => '根据分类采集小说列表(分类key：'.$categoryKey.')',
+                        'note' => serialize($category),
+                    ]);
+                    $log->save();
                 }
             } else {
-                //todo 记录日志 分类缺少必要信息
+                $log = new Log([
+                    'type' => Log::LOG_TYPE_CONFIG,
+                    'model' => Fiction::class,
+                    'function' => __FUNCTION__,
+                    'work' => '根据分类id、渠道关于分类及分类中小说列表的配置采集小说列表',
+                    'note' => serialize($category),
+                ]);
+                $log->save();
             }
         }
     }
@@ -164,7 +185,14 @@ class Fiction extends ActiveRecord
                 }
             }
         } else {
-            //todo 记录日志 没有找到指定小说的渠道
+            $log = new Log([
+                'type' => Log::LOG_TYPE_GATHER,
+                'model' => Fiction::class,
+                'function' => __FUNCTION__,
+                'work' => '获取指定小说的信息（作者、描述、章节列表）',
+                'note' => serialize($this),
+            ]);
+            $log->save();
         }
         return $this;
     }
@@ -201,12 +229,26 @@ class Fiction extends ActiveRecord
                     if ($chapter->hasTable()) {
                         $chapter->updateFictionChapter($detail['list']);
                     } else {
-                        //todo 记录日志 没有数据表
+                        $log = new Log([
+                            'type' => Log::LOG_TYPE_DB,
+                            'model' => Fiction::class,
+                            'function' => __FUNCTION__,
+                            'work' => '保存指定小说的信息（章节列表）',
+                            'note' => serialize($this),
+                        ]);
+                        $log->save();
                     }
                 }
             }
         } else {
-            //todo 记录日志 没有找到指定小说的渠道
+            $log = new Log([
+                'type' => Log::LOG_TYPE_CONFIG,
+                'model' => Fiction::class,
+                'function' => __FUNCTION__,
+                'work' => '保存指定小说的信息',
+                'note' => serialize($this),
+            ]);
+            $log->save();
         }
     }
 

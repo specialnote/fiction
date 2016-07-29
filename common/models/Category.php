@@ -59,7 +59,10 @@ class Category extends ActiveRecord
         ];
     }
 
-    //初始化或者更新分类配置信息，保存到数据库，在console控制器中使用，不是定时任务，可以抛异常
+    /**
+     * 初始化分类配置信息
+     * @throws \Exception
+     */
     public static function updateCategoryInformation()
     {
         $config = new Config();
@@ -83,7 +86,14 @@ class Category extends ActiveRecord
                         ]);
                         $res = $category->save();
                         if (!$res) {
-                            //todo 保存失败
+                            $log = new Log([
+                                'type' => Log::LOG_TYPE_SAVE,
+                                'model' => Category::class,
+                                'function' => __FUNCTION__,
+                                'work' => '初始化分类配置信息',
+                                'note' => serialize($category),
+                            ]);
+                            $log->save();
                         }
                     }
                 }

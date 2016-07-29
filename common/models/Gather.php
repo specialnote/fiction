@@ -7,6 +7,7 @@ use Goutte\Client;
 class Gather
 {
     /**
+     * 采集章节列表
      * @param string $url 分类所在页面地址
      * @param string $categoryRule 分类所在区块的采集规则
      * @param int $categoryNum 根据分类规则获取分类的序号
@@ -40,7 +41,14 @@ class Gather
                 });
             }
         } catch (\Exception $e) {
-            //todo 采集失败 记录日志
+            $log = new Log([
+                'type' => Log::LOG_TYPE_GATHER,
+                'model' => Gather::class,
+                'function' => __FUNCTION__,
+                'work' => '采集小说列表',
+                'note' => $url,
+            ]);
+            $log->save();
         }
 
         return $list;
@@ -79,7 +87,14 @@ class Gather
                     });
                 }
             } catch (\Exception $e) {
-                //todo 采集失败 记录日志 日后重复采集
+                $log = new Log([
+                    'type' => Log::LOG_TYPE_GATHER,
+                    'model' => Gather::class,
+                    'function' => __FUNCTION__,
+                    'work' => '采集章节列表',
+                    'note' => $url,
+                ]);
+                $log->save();
             }
         }
 
@@ -91,6 +106,7 @@ class Gather
         ];
     }
 
+    //采集小说详情
     public static function getFictionDetail($url, $rule)
     {
         $content = '';
@@ -108,7 +124,14 @@ class Gather
                 }
             }
         } catch (\Exception $e) {
-            //todo 处理查找失败
+            $log = new Log([
+                'type' => Log::LOG_TYPE_GATHER,
+                'model' => Gather::class,
+                'function' => __FUNCTION__,
+                'work' => '采集章节详情',
+                'note' => $url,
+            ]);
+            $log->save();
         }
         return $content;
     }
