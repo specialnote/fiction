@@ -11,7 +11,9 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
-\frontend\assets\BaiduCountAsset::register($this);
+if (YII_ENV === 'prod') {
+    \frontend\assets\BaiduCountAsset::register($this);
+}
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
