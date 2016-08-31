@@ -21,8 +21,10 @@ if (YII_ENV === 'prod') {
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<?= $this->description?>">
+    <meta name="keywords" content="<?= $this->keywords?>">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Yii::$app->params['company_name'].Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>

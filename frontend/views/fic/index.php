@@ -1,4 +1,5 @@
 <?php
+/* @var $this \frontend\models\view\FrontendView */
     use yii\helpers\Html;
 
     $list = $chapterList;
@@ -11,13 +12,15 @@
         $sort_list = [];
         $latest = [];
     }
-
-    $frontend_host = Yii::$app->params['frontend_host'];
-    $fk = $fiction->fictionKey;
-    $title = Html::encode($fiction->name);
-    $author = Html::encode($fiction->author);
-    $this->title = $title.'('.$author.')-最新目录';
-    $this->headline = $title;
+$company = Yii::$app->params['company_name'];
+$frontend_host = Yii::$app->params['frontend_host'];
+$fk = $fiction->fictionKey;
+$title = Html::encode($fiction->name);
+$author = Html::encode($fiction->author);
+$this->title = $title . '-' . $author . '-最新章节';
+$this->headline = $title;
+$this->description = $company . '-' . $this->title;
+$this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author;
 ?>
 <div class="row" id="list_header">
     <div class="col-xs-12 col-md-12">

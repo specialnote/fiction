@@ -1,6 +1,12 @@
 <?php
-    $this->title = $category->name;
-    $this->headline = $category->name;
+$company = Yii::$app->params['company_name'];
+$categories = \common\models\Category::find()->all();
+$categoryNames = \yii\helpers\ArrayHelper::getColumn($categories, 'name');
+$categoryNameString = implode('、', $categoryNames);
+$this->title = $category->name . '-' . $company;
+$this->headline = $category->name;
+$this->description = $this->title;
+$this->keywords = $company . ',' . implode(',', $categoryNames);
 ?>
 
 <div class="container">

@@ -1,6 +1,13 @@
 <?php
-$this->title = Yii::$app->params['company_name'];
-$this->headline = Yii::$app->params['company_name'];
+/* @var $this \frontend\models\view\FrontendView */
+$company = Yii::$app->params['company_name'];
+$categories = \common\models\Category::find()->all();
+$categoryNames = \yii\helpers\ArrayHelper::getColumn($categories, 'name');
+$categoryNameString = implode('、', $categoryNames);
+$this->title = $company . '-' . $company . '首页-' . $company . '官网-小说-' . $categoryNameString . '！';
+$this->headline = $company;
+$this->description = $this->title;
+$this->keywords = $company . ',' . implode(',', $categoryNames);
 \frontend\assets\MasonryAsset::register($this);
 ?>
 <style>
