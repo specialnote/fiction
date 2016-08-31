@@ -23,7 +23,6 @@ if (YII_ENV === 'prod') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?= $this->description?>">
     <meta name="keywords" content="<?= $this->keywords?>">
-    <meta name="baidu-site-verification" content="QWxdr7rz6r" />
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
