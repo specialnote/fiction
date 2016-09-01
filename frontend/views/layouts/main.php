@@ -61,13 +61,13 @@ if (YII_ENV === 'prod') {
         <?= $content ?>
     </div>
 </div>
-
+<?php if (YII_ENV !== 'prod') { ?>
 <footer class="footer">
     <div class="container">
 
     </div>
 </footer>
-
+<?php } ?>
 <?php $this->endBody() ?>
 </body>
 </html>
