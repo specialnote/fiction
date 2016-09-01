@@ -11,9 +11,6 @@ class BaiduController extends Controller
 {
     public function actionLinkPush()
     {
-        $url = ['http://f.specialnote.cn/fic/detail?fid=8684&num=2'];
-        $res = LinkPush::push($url);
-        var_dump($res);die;
         $urls = Fiction::getAllFictionUrl();
         $count = count($urls);
         $totalPage = ceil($count / 1000);
