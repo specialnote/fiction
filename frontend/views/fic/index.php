@@ -33,7 +33,7 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author;
     </div>
     <?php if ($latest) { ?>
     <div class="col-xs-12 col-md-12">
-        <p><span class="label label-info">最新章节:</span> <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= count($list) ?>"><?= $list[count($list) - 1]['text']?></a></p>
+        <p><span class="label label-info">最新章节</span> <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= count($list) ?>"><?= $list[count($list) - 1]['text']?></a></p>
     </div>
     <?php } ?>
 </div>
