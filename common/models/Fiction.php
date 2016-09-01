@@ -306,4 +306,17 @@ class Fiction extends ActiveRecord
             }
         }
     }
+
+    //获取所有小说的地址
+    public static function getAllFictionUrl()
+    {
+        $host = rtrim(\Yii::$app->params['frontend_host'], '/');
+        $urls = [];
+        $ids = self::find()->select('id')->all();
+        $ids = ArrayHelper::getColumn($ids, 'id');
+        foreach ($ids as $id) {
+            $urls[] = $host . '/fic/index?id=' . $id;
+        }
+        return $ids;
+    }
 }
