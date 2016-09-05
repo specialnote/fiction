@@ -18,7 +18,7 @@ class FictionController extends Controller
     public function actionUpdateFictionChapterList($page = 1)
     {
         @ini_set('memory_limit', '256M');
-        $fictions = Fiction::find()->where(['status' => 1])->offset(($page - 1) * 100)->limit(100)->orderBy(['id' => SORT_ASC])->all();
+        $fictions = Fiction::find()->where(['status' => 1])->andWhere(['fictionKey' => null])->offset(($page - 1) * 100)->limit(100)->orderBy(['id' => SORT_ASC])->all();
         foreach ($fictions as $fiction) {
             $fiction->updateFictionDetail();
         }
