@@ -15,18 +15,12 @@ class FictionController extends Controller
     }
 
     //更新所有小说的章节列表
-   /* public function actionUpdateFictionChapterList()
+    public function actionUpdateFictionChapterList($page = 1)
     {
         @ini_set('memory_limit', '256M');
-        $count = Fiction::find()->where(['status' => 1])->count();
-        if ($count > 0) {
-            for ($i = 1; $i <= ceil($count / 10); $i++) {
-                Fiction::updateAllFictionChapterList($i * 10);
-                break;
-            }
+        $fictions = Fiction::find()->where(['status' => 1])->offset(($page - 1) * 100)->limit(100)->orderBy(['id' => SORT_ASC])->all();
+        foreach ($fictions as $fiction) {
+            $fictions->updateFictionDetail();
         }
-
-    }*/
-
-
+    }
 }
