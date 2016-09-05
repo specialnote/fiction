@@ -20,7 +20,7 @@ class FictionController extends Controller
         @ini_set('memory_limit', '256M');
         $fictions = Fiction::find()->where(['status' => 1])->offset(($page - 1) * 100)->limit(100)->orderBy(['id' => SORT_ASC])->all();
         foreach ($fictions as $fiction) {
-            $fictions->updateFictionDetail();
+            $fiction->updateFictionDetail();
         }
     }
 }
