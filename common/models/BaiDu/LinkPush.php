@@ -2,7 +2,6 @@
 
 namespace common\models\BaiDu;
 
-
 use yii\base\Model;
 
 class LinkPush extends Model

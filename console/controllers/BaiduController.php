@@ -2,7 +2,6 @@
 
 namespace console\controllers;
 
-
 use common\models\BaiDu\LinkPush;
 use common\models\Fiction;
 use yii\console\Controller;

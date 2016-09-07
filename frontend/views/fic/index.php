@@ -31,11 +31,13 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author;
             <?= Html::encode($fiction->description)?>
         </p>
     </div>
-    <?php if ($latest) { ?>
+    <?php if ($latest) {
+    ?>
     <div class="col-xs-12 col-md-12">
         <p><span class="label label-info">最新章节</span> <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= count($list) ?>"><?= $list[count($list) - 1]['text']?></a></p>
     </div>
-    <?php } ?>
+    <?php 
+} ?>
 </div>
 <div class="row">
     <div class="col-xs-12 col-md-12">
@@ -48,22 +50,30 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author;
 <div class="row">
     <div class="col-xs-12 col-md-12">
         <ul class="list-group" id="list_body_asc">
-            <?php if($list) { ?>
-                <?php foreach ($list as $k => $v) { ?>
+            <?php if ($list) {
+    ?>
+                <?php foreach ($list as $k => $v) {
+    ?>
                     <li id="f_c_list_<?= $k?>" class="list-group-item" >
                         <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= $k + 1 ?>"><?= $v['text']?></a>
                     </li>
-                <?php }?>
-            <?php } ?>
+                <?php 
+} ?>
+            <?php 
+} ?>
         </ul>
         <ul class="list-group" id="list_body_desc" style="display: none">
-            <?php if($sort_list) { ?>
-                <?php foreach ($sort_list as $k => $v) { ?>
+            <?php if ($sort_list) {
+    ?>
+                <?php foreach ($sort_list as $k => $v) {
+    ?>
                     <li id="f_c_list_<?= (count($sort_list) - $k) ?>" class="list-group-item" >
                         <a href="/fic/detail?fid=<?= $fiction->id ?>&num=<?= (count($sort_list) - $k) ?>"><?= $v['text']?></a>
                     </li>
-                <?php }?>
-            <?php } ?>
+                <?php 
+} ?>
+            <?php 
+} ?>
         </ul>
     </div>
 </div>

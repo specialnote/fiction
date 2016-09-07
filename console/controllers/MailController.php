@@ -2,7 +2,6 @@
 
 namespace console\controllers;
 
-
 use yii\console\Controller;
 use Yii;
 

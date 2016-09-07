@@ -15,8 +15,10 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
     .masonry-item h3{font-weight: bolder;}
 </style>
 <div class="row masonry">
-    <?php if ($fictions) { ?>
-        <?php foreach ($fictions as $fiction) { ?>
+    <?php if ($fictions) {
+    ?>
+        <?php foreach ($fictions as $fiction) {
+    ?>
             <div class="col-xs-6 col-md-3 masonry-item" onclick="location.href = '/fic/index?id=<?= $fiction->id ?>'">
                 <div class="jumbotron">
                     <h3><?= $fiction->name?></h3>
@@ -24,8 +26,10 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
                     <p style="font-size: 14px;"><?= $fiction->description?></p>
                 </div>
             </div>
-        <?php }?>
-    <?php }?>
+        <?php 
+} ?>
+    <?php 
+}?>
 </div>
 <script type="text/javascript">
     $('.masonry').masonry({

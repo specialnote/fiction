@@ -4,7 +4,6 @@ namespace frontend\controllers;
 
 use common\models\Ditch;
 use common\models\Fiction;
-use frontend\models\Category;
 use yii\helpers\ArrayHelper;
 
 class SiteController extends BaseController
