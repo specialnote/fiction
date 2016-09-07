@@ -11,7 +11,7 @@ class SiteController extends BaseController
 {
     public function actionIndex()
     {
-        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->all();
+        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->orderBy(['views' => SORT_DESC])->all();
         $ids = ArrayHelper::getColumn($ids, 'id');
         $randIds = [];
         $count = count($ids);

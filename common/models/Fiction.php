@@ -20,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property string $author
  * @property string $url
  * @property int $status
+ * @property int $views
  */
 class Fiction extends ActiveRecord
 {
@@ -40,7 +41,7 @@ class Fiction extends ActiveRecord
     {
         return [
             [['description'], 'string'],
-            [['status'], 'integer'],
+            [['status', 'views'], 'integer'],
             [['categoryKey', 'ditchKey'], 'string', 'max' => 80],
             [['fictionKey'], 'string', 'max' => 100],
             [['name', 'author', 'url'], 'string', 'max' => 50],
@@ -62,6 +63,7 @@ class Fiction extends ActiveRecord
             'author' => 'Author',
             'url' => 'Url',
             'status' => 'Status',
+            'views' => '浏览次数',
         ];
     }
 

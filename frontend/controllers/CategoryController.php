@@ -19,7 +19,7 @@ class CategoryController extends BaseController
             'totalCount' => $query->count(),
             'pageSize' => 40
         ]);
-        $fictionList = $query->offset($pages->offset)->limit($pages->limit)->all();
+        $fictionList = $query->offset($pages->offset)->limit($pages->limit)->orderBy(['views' => SORT_DESC])->all();
         return $this->render('index', [
             'category' => $category,
             'fictionList' => $fictionList,

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Chapter;
 use common\models\Fiction;
+use common\models\UpdateUrl;
 use Goutte\Client;
 use yii\base\Exception;
 use yii\helpers\Html;
@@ -24,6 +25,7 @@ class FicController extends BaseController
             $this->err404('没有找到指定小说数据');
         }
         $chapterList = $fiction->getChapterList();
+        Fiction::updateAll(['views' => ($fiction->views + 1)], ['id' => $fiction->id]);
         return $this->render('index', [
             'fiction' => $fiction,
             'chapterList' => $chapterList,
@@ -35,7 +37,18 @@ class FicController extends BaseController
     {
         $fiction = Fiction::findOne($id);
         if ($fiction) {
-            $fiction->updateFictionDetail();
+            $host = rtrim(\Yii::$app->params['frontend_host'], '/');
+            $url = 'http://'.$host . '/fic/index?id=' . $fiction->id;
+            $date = date('Y-m-d');
+            $updateLog = UpdateUrl::find()->where(['url' => $url, 'updateTime' => $date])->one();
+            if (!$updateLog) {
+                $fiction->updateFictionDetail();
+                $log = new UpdateUrl([
+                    'url' => $url,
+                    'updateTime' => $date,
+                ]);
+                $log->save();
+            }
         }
     }
 
