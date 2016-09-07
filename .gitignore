@@ -31,3 +31,7 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+
+#sitemap
+/frontend/web/sitemap_main.xml
