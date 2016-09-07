@@ -315,8 +315,8 @@ class Fiction extends ActiveRecord
         $ids = self::find()->select('id')->all();
         $ids = ArrayHelper::getColumn($ids, 'id');
         foreach ($ids as $id) {
-            $urls[] = $host . '/fic/index?id=' . $id;
+            $urls[] = 'http://'.$host . '/fic/index?id=' . $id;
         }
-        return $ids;
+        return $urls;
     }
 }
