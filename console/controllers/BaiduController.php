@@ -18,6 +18,7 @@ class BaiduController extends Controller
         for ($i = 1; $i <= $totalPage; $i++) {
             $sliceUrls = array_slice($urls, ($i - 1) * 1000, 1000);
             $res = LinkPush::push($sliceUrls);
+            var_dump($res);
         }
     }
 
