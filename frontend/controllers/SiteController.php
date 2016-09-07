@@ -22,7 +22,7 @@ class SiteController extends BaseController
                 $randIds[] = $ids[$k];
             }
         }
-        $fictions = Fiction::find()->where('fictionKey IS NOT NULL')->andWhere(['id' => $ids])->all();
+        $fictions = Fiction::find()->where('fictionKey IS NOT NULL')->andWhere(['id' => $randIds])->all();
         return $this->render('index', [
             'fictions' => $fictions,
         ]);
