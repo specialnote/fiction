@@ -123,9 +123,18 @@ a.desc:after {
 .wrap > .container{padding-bottom: 0px;}
 .wrap{padding: 0px;}
     /**分类列表**/
-#category_list div{ font-size: 16px; padding: 0px 5px 0px 5px;}
-#category_list div p{ -o-text-overflow: ellipsis;/*兼容opera*/  text-overflow: ellipsis;/*这就是省略号喽*/  overflow: hidden;/*设置超过的隐藏*/  white-space: nowrap;/*设置不折行*/}
-#category_list div .category_list_author{font-size: 12px;color: #ccc;}
+#category_list li{border: 0px;padding: 5px;}
+#category_list li p{
+    border: 1px solid #ddd;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding: 10px 15px;
+    -o-text-overflow: ellipsis;/*兼容opera*/
+    text-overflow: ellipsis;/*这就是省略号喽*/
+    overflow: hidden;/*设置超过的隐藏*/
+    white-space: nowrap;/*设置不折行*/
+}
+#category_list li .category_list_author{font-size: 12px;color: #ccc;margin-left: 5px;}
 
 #search_form .input-group-addon{padding: 0px;}
 #search_form .btn-default{border: 0px;}
@@ -145,5 +154,5 @@ a.desc:after {
     margin-top: 5px;
 }
 
-#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 15px 5px;}
+#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 15px 5px;min-height: 194px;}
 #site_body .jumbotron h3{margin: 5px; -o-text-overflow: ellipsis;  text-overflow: ellipsis;  overflow: hidden;  white-space: nowrap;}
