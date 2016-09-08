@@ -312,12 +312,18 @@ class Fiction extends ActiveRecord
     //获取所有小说的地址
     public static function getAllFictionUrl()
     {
-        $host = rtrim(\Yii::$app->params['frontend_host'], '/');
-        $urls = [];
         $ids = self::find()->select('id')->all();
         $ids = ArrayHelper::getColumn($ids, 'id');
+        return self::getFictionUrls($ids);
+    }
+
+    //获取指定小说的url
+    public static function getFictionUrls(array $ids)
+    {
+        $host = rtrim(\Yii::$app->params['frontend_host'], '/');
+        $urls = [];
         foreach ($ids as $id) {
-            $urls[] = 'http://'.$host . '/fic/index?id=' . $id;
+            $urls[] = 'http://' . $host . '/fic/index?id=' . $id;
         }
         return $urls;
     }

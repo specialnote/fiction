@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\BaiDu\LinkPush;
 use yii\base\Model;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -75,9 +76,16 @@ CREATE TABLE IF NOT EXISTS " . $this->tableName . "(
                 }
             }
             if ($data) {
+                //更新章节信息
                 $res = Yii::$app->db->createCommand()->batchInsert($this->tableName, ['ditchKey', 'fictionId', 'chapter', 'url'], $data)->execute();
                 if ($res) {
                     return true;
+                }
+                if (YII_ENV === 'prod') {
+                    //将更新的小说地址传到百度
+                    $ids = [$this->fictionId];
+                    $urls = Fiction::getFictionUrls($ids);
+                    LinkPush::push($urls);
                 }
             }
         }
