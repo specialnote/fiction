@@ -293,6 +293,13 @@ class Fiction extends ActiveRecord
         return ['text' => $list['text'], 'detail' => $content];
     }
 
+    //获取章节列表数
+    public function getChapterCount()
+    {
+        $chapter = (new Chapter())->initChapter($this);
+        return $chapter->getMaxNum();
+    }
+
     //缓存指定章节详情
     public function cache($num)
     {
@@ -338,5 +345,10 @@ class Fiction extends ActiveRecord
             }
         }
         return $urls;
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(Category::class, ['categoryKey' => 'categoryKey']);
     }
 }

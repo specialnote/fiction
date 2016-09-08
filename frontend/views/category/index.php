@@ -10,6 +10,8 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
 ?>
 
 <div class="container">
+    <?php if ($fictionList) {
+    ?>
     <div class="row" id="category_list">
         <?php foreach ($fictionList as $fiction) {
     ?>
@@ -19,7 +21,7 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
                 </a>
             </div>
         <?php 
-}?>
+} ?>
     </div>
     <div class="row" style="margin: 0px;position: inherit;bottom: 40px;width: 100%;;">
         <div class="col-xs-12 col-md-12 text-center">
@@ -31,4 +33,10 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
             ])?>
         </div>
     </div>
+    <?php 
+} else {
+    ?>
+    <div class="row">暂无数据</div>
+    <?php 
+}?>
 </div>

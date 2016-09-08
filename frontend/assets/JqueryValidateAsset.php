@@ -8,19 +8,19 @@ use yii\web\View;
 /**
  * Main frontend application asset bundle.
  */
-class AppAsset extends AssetBundle
+class JqueryValidateAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/site.css',
     ];
     public $js = [
-        '/layer/layer.js',
+        '/js/jquery_validate/jquery.validate.min.js',
+        '/js/jquery_validate/messages_zh.min.js',
+        '/js/validate.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
     ];
     public $jsOptions = [
         'position' => View::POS_BEGIN,

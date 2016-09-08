@@ -11,6 +11,8 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+\frontend\assets\JqueryValidateAsset::register($this);
+
 if (YII_ENV === 'prod') {
     \frontend\assets\BaiduCountAsset::register($this);
 }
@@ -59,6 +61,16 @@ if (YII_ENV === 'prod') {
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
+        <div class="row">
+            <form action="/category/search" method="get" role="form" class="form-inline" id="search_form">
+                <div class="form-group col-xs-12 col-md-12">
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="小说名|作者" name="search_key" value="<?= trim(Yii::$app->request->get('search_key'))?>"/>
+                        <div class="input-group-addon"><button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button></div>
+                    </div>
+                </div>
+            </form>
+        </div>
         <?= $content ?>
     </div>
 </div>

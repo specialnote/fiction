@@ -6,6 +6,14 @@ $this->description = $company . '-' . $this->title;
 $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ',' . $detail['text'];
 ?>
 <div class="row">
+    <?php $rate = min(100, ceil($num / $fiction->getChapterCount() * 100)); ?>
+    <div class="progress">
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?= $rate ?>%;">
+            <?= $rate ?>%
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-xs-6 col-md-6">
         <div class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
             <a class="btn btn-default font_small" role="button">-</a>

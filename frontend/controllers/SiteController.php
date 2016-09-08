@@ -2,8 +2,10 @@
 
 namespace frontend\controllers;
 
+use common\models\Category;
 use common\models\Ditch;
 use common\models\Fiction;
+use yii\data\Pagination;
 use yii\helpers\ArrayHelper;
 
 class SiteController extends BaseController
