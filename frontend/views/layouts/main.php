@@ -62,6 +62,11 @@ if (YII_ENV === 'prod') {
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
+        <?php
+            $controller = Yii::$app->controller->id;
+            $action = Yii::$app->controller->action->id;
+        ?>
+        <?php if($controller !== 'site' && $action !== 'index') { ?>
         <div class="row float-right">
             <form action="/category/search" method="get" role="form" class="form-inline" id="search_form">
                 <div class="form-group col-xs-12 col-md-12">
@@ -72,6 +77,7 @@ if (YII_ENV === 'prod') {
                 </div>
             </form>
         </div>
+        <?php } ?>
         <?= $content ?>
     </div>
 </div>

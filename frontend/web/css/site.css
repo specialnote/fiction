@@ -22,11 +22,6 @@ body {
     padding-top: 20px;
 }
 
-.jumbotron {
-    text-align: center;
-    background-color: transparent;
-}
-
 .jumbotron .btn {
     font-size: 21px;
     padding: 14px 24px;
@@ -140,3 +135,15 @@ a.desc:after {
 #w1 li:hover a{color: white;font-weight: 900}
 #w0 .navbar-header a{color:#000000;font-weight: 900;}
 #w0 .navbar-header:hover a{color:#ffffff;font-weight: 900;}
+#site_body .jumbotron p {
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 15px 5px;}
+#site_body .jumbotron h3{margin: 5px; -o-text-overflow: ellipsis;  text-overflow: ellipsis;  overflow: hidden;  white-space: nowrap;}
