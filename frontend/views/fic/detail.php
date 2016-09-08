@@ -79,5 +79,7 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ','
 
     //缓存当前详情
     $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num ?>);
+    //缓存下一章
+    $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num+1 ?>);
 </script>
 

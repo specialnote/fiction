@@ -72,15 +72,14 @@ class FicController extends BaseController
     public function actionCache($fid, $num)
     {
         $fiction = Fiction::findOne($fid);
-        if (!$fiction) {
-            $this->err404('没有找到指定小说');
-        }
-        $fiction->cache($num);
-        if (YII_ENV === 'prod') {
-            $data = [['id' => $fid, 'num' => $num]];
-            //向百度推送小说详情章节
-            $urls = Fiction::getDetailUrls($data);
-            LinkPush::push($urls);
+        if ($fiction) {
+            $fiction->cache($num);
+            if (YII_ENV === 'prod') {
+                $data = [['id' => $fid, 'num' => $num]];
+                //向百度推送小说详情章节
+                $urls = Fiction::getDetailUrls($data);
+                LinkPush::push($urls);
+            }
         }
     }
 
