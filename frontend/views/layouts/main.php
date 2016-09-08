@@ -26,6 +26,7 @@ if (YII_ENV === 'prod') {
     <meta name="sogou_site_verification" content="ATC69gwHz1"/>
     <meta name="description" content="<?= $this->description?>">
     <meta name="keywords" content="<?= $this->keywords?>">
+    <link type="image/x-icon" href="<?= \yii\helpers\Url::to("/fiction_note.ico")?>" rel="shortcut icon">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
