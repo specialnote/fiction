@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use common\models\Fiction;
 use yii\console\Controller;
+use yii\helpers\ArrayHelper;
 
 class FictionController extends Controller
 {
@@ -25,6 +26,11 @@ class FictionController extends Controller
                     $fiction->updateFictionDetail();
                 }
             }
+        }
+        //将异常小说标出来
+        $exceptionFiction =  Fiction::find()->select(['id'])->where(['status' => 1])->andWhere(['fictionKey' => null])->andWhere(['id' => ArrayHelper::getColumn($fictions, 'id')])->asArray()->all();
+        if (count($exceptionFiction) > 0) {
+            Fiction::updateAll(['status' => 2], ['id' => ArrayHelper::getColumn($exceptionFiction, 'id')]);
         }
     }
 

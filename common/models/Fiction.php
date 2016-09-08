@@ -19,7 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property string $description
  * @property string $author
  * @property string $url
- * @property int $status
+ * @property int $status 1:正常 2:更新失败
  * @property int $views
  */
 class Fiction extends ActiveRecord
