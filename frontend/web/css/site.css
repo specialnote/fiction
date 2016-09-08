@@ -140,10 +140,13 @@ a.desc:after {
 #search_form .btn-default{border: 0px;}
 .float-right{float: right;}
 #w0{background-color: #cc6600}
-#w1 li a{color: black;font-weight: 900}
+#w1 li a{color: white;font-weight: 900}
 #w1 li:hover a{color: white;font-weight: 900}
-#w0 .navbar-header a{color:#000000;font-weight: 900;}
-#w0 .navbar-header:hover a{color:#ffffff;font-weight: 900;}
+#w0-collapse {border: 1px solid white}
+#w0 {border: 1px solid white}
+#w0 .navbar-header{border: 1px solid white}
+#w0 .navbar-header a{color:white;font-weight: 900;}
+#w0 .navbar-header:hover a{color:white;font-weight: 900;}
 #site_body .jumbotron p {
     overflow : hidden;
     text-overflow: ellipsis;
@@ -156,3 +159,5 @@ a.desc:after {
 
 #site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 15px 5px;min-height: 194px;}
 #site_body .jumbotron h3{margin: 5px; -o-text-overflow: ellipsis;  text-overflow: ellipsis;  overflow: hidden;  white-space: nowrap;}
+
+#w0 .navbar-header .navbar-toggle{background-color: #cc6600;border: 1px solid white;}
