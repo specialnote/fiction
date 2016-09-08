@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\BaiDu\LinkPush;
 use common\models\Chapter;
 use common\models\Fiction;
 use common\models\UpdateUrl;
@@ -75,6 +76,12 @@ class FicController extends BaseController
             $this->err404('没有找到指定小说');
         }
         $fiction->cache($num);
+        if (YII_ENV === 'prod') {
+            $data = [['id' => $fid, 'num' => $num]];
+            //向百度推送小说详情章节
+            $urls = Fiction::getDetailUrls($data);
+            LinkPush::push($urls);
+        }
     }
 
     //ajax获取上一章、下一章

@@ -327,4 +327,16 @@ class Fiction extends ActiveRecord
         }
         return $urls;
     }
+
+    public static function getDetailUrls(array $data)
+    {
+        $host = rtrim(\Yii::$app->params['frontend_host'], '/');
+        $urls = [];
+        foreach ($data as $val) {
+            if (isset($val['id']) && isset($val['num'])) {
+                $urls[] = 'http://' . $host . 'fic/detail?fid=' . $val['id'] . '&num=' . $val['num'];
+            }
+        }
+        return $urls;
+    }
 }
