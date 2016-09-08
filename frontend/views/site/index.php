@@ -14,6 +14,13 @@ $this->keywords = $company . ',' . implode(',', $categoryNames);
     .jumbotron{padding: 0px;margin: 0px;cursor: pointer;}
     .masonry-item h3{font-weight: bolder;}
 </style>
+<div class="row">
+    <div class="">
+        <button class="btn btn-primary" type="button">
+            热门推荐 <span class="badge"><?= count($fictions)?></span>
+        </button>
+    </div>
+</div>
 <div class="row masonry">
     <?php if ($fictions) {
     ?>

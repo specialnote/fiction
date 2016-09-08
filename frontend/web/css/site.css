@@ -133,3 +133,10 @@ a.desc:after {
 #category_list div .category_list_author{font-size: 12px;color: #ccc;}
 
 #search_form .input-group-addon{padding: 0px;}
+#search_form .btn-default{border: 0px;}
+.float-right{float: right;}
+#w0{background-color: #cc6600}
+#w1 li a{color: black;font-weight: 900}
+#w1 li:hover a{color: white;font-weight: 900}
+#w0 .navbar-header a{color:#000000;font-weight: 900;}
+#w0 .navbar-header:hover a{color:#ffffff;font-weight: 900;}

@@ -62,7 +62,7 @@ if (YII_ENV === 'prod') {
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <?= Alert::widget() ?>
-        <div class="row">
+        <div class="row float-right">
             <form action="/category/search" method="get" role="form" class="form-inline" id="search_form">
                 <div class="form-group col-xs-12 col-md-12">
                     <div class="input-group">

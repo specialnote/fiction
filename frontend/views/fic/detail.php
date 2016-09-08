@@ -6,6 +6,8 @@ $this->description = $company . '-' . $this->title;
 $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ',' . $detail['text'];
 ?>
 <div class="row">
+    <h2><?= $fiction->name?><span class="small"><?= $fiction->author?></span></h2>
+
     <?php $rate = min(100, ceil($num / $fiction->getChapterCount() * 100)); ?>
     <div class="progress">
         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?= $rate ?>%;">
@@ -66,7 +68,7 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ','
         }
     });
     $('#close_light').click(function () {
-        content.toggleClass('close_light_style');
+        $('body').toggleClass('close_light_style');
     });
 
     //获取上一章、下一章链接
