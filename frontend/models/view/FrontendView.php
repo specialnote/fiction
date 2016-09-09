@@ -10,4 +10,6 @@ class FrontendView extends View
     public $categoryList;//小说列表
     public $description;//meta-description
     public $keywords;//meta-keywords
+    public $categoryKey;
+    public $categoryName;
 }

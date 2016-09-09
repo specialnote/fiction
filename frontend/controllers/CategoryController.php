@@ -30,9 +30,13 @@ class CategoryController extends BaseController
     public function actionSearch()
     {
         $key = trim(\Yii::$app->request->get('search_key', ''));
+        $categoryKey = trim(\Yii::$app->request->get('category_key', ''));
         if ($key) {
             //查找小说名
             $query = Fiction::find()->where(['like', 'name', $key]);
+            if ($categoryKey) {
+                $query = $query->andWhere(['categoryKey' => $categoryKey]);
+            }
             $pages = new Pagination([
                 'totalCount' => $query->count(),
                 'pageSize' => 40
@@ -43,6 +47,9 @@ class CategoryController extends BaseController
                 $category = $fiction->category;
             } else {
                 $query = Fiction::find()->where(['like', 'author', $key]);
+                if ($categoryKey) {
+                    $query = $query->andWhere(['categoryKey' => $categoryKey]);
+                }
                 $pages = new Pagination([
                     'totalCount' => $query->count(),
                     'pageSize' => 40

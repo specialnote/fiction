@@ -7,6 +7,8 @@ $this->title = $category->name . '-' . $company;
 $this->headline = $category->name;
 $this->description = $this->title;
 $this->keywords = $company . ',' . implode(',', $categoryNames);
+$this->categoryKey = $category->categoryKey;
+$this->categoryName = $category->name;
 ?>
 
 <div class="container">
