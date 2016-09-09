@@ -66,7 +66,7 @@ if (YII_ENV === 'prod') {
             $controller = Yii::$app->controller->id;
             $action = Yii::$app->controller->action->id;
         ?>
-        <?php if($controller !== 'site' && $action !== 'index') { ?>
+        <?php if($controller !== 'site' || $action !== 'index') { ?>
         <div class="row float-right">
             <form action="/category/search" method="get" role="form" class="form-inline" id="search_form">
                 <div class="form-group col-xs-12 col-md-12">
