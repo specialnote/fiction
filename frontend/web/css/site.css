@@ -142,9 +142,9 @@ a.desc:after {
 #w0{background-color: #cc6600}
 #w1 li a{color: white;font-weight: 900}
 #w1 li:hover a{color: white;font-weight: 900}
-#w0-collapse {border: 1px solid white}
-#w0 {border: 1px solid white}
-#w0 .navbar-header{border: 1px solid white}
+#w0-collapse {border: 0px;}
+#w0 {border: 0px;}
+#w0 .navbar-header{border: 0px;}
 #w0 .navbar-header a{color:white;font-weight: 900;}
 #w0 .navbar-header:hover a{color:white;font-weight: 900;}
 #site_body .jumbotron p {
