@@ -135,4 +135,29 @@ class Gather
         }
         return $content;
     }
+
+    //采集指定小说的图片地址
+    public static function getFictionImgUrl($fictionUrl)
+    {
+        $client = new Client();
+        $crawler = $client->request('GET', $fictionUrl);
+        try {
+            if ($crawler) {
+                $img = $crawler->filter('#fmimg img');
+                if ($img) {
+                    return $img->attr('src');
+                }
+            }
+        } catch (\Exception $e) {
+            $log = new Log([
+                'type' => Log::LOG_TYPE_GATHER,
+                'model' => Gather::class,
+                'function' => __FUNCTION__,
+                'work' => '采集小说图片',
+                'note' => $fictionUrl,
+            ]);
+            $log->save();
+        }
+        return null;
+    }
 }

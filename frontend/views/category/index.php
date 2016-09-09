@@ -21,13 +21,15 @@ $this->categoryName = $category->name;
     ?>
     <div class="row" id="category_list">
         <ul class="list-group">
-        <?php foreach ($fictionList as $fiction) { ?>
+        <?php foreach ($fictionList as $fiction) {
+    ?>
                 <li class="list-group-item col-xs-6 col-md-3">
                     <a href="/fic/index?id=<?= $fiction->id?>">
                         <p><?= $fiction->name?><span class="category_list_author"><?= $fiction->author?></span></p>
                     </a>
                 </li>
-        <?php } ?>
+        <?php 
+} ?>
         </ul>
     </div>
     <div class="row" style="margin: 0px;position: inherit;bottom: 40px;width: 100%;;">

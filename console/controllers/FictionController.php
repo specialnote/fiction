@@ -35,11 +35,21 @@ class FictionController extends Controller
     }
 
     //更新指定小说的章节信息
-    public function updateFictionChapterListById($id)
+    public function actionUpdateFictionChapterListById($id)
     {
         $fiction = Fiction::findOne($id);
         if (!$fiction->fictionKey) {
             $fiction->updateFictionDetail();
+        }
+    }
+
+    public function actionUpdateImgUrl()
+    {
+        $fictions = Fiction::find()->where(['not', ['fictionKey' => null]])->andWhere(['imgUrl' => null])->andWhere(['status' => 1])->limit(50)->all();
+        if ($fictions) {
+            foreach ($fictions as $fiction) {
+                $fiction->updateImgUrl();
+            }
         }
     }
 }

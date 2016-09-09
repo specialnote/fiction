@@ -68,21 +68,25 @@ if (YII_ENV === 'prod') {
             $targetUrl = $controller.'/'.$action;
             $categoryKey = $this->categoryKey;
         ?>
-        <?php if(!in_array($targetUrl, ['site/index', 'fic/detail'])) { ?>
+        <?php if (!in_array($targetUrl, ['site/index', 'fic/detail'])) {
+    ?>
         <div class="row float-right">
             <form action="/category/search" method="get" role="form" class="form-inline" id="search_form">
                 <div class="form-group col-xs-12 col-md-12">
                     <div class="input-group">
-                        <?php if($categoryKey) {?>
+                        <?php if ($categoryKey) {
+    ?>
                             <input type="hidden" name="category_key" value="<?= $this->categoryKey?>"/>
-                        <?php }?>
+                        <?php 
+} ?>
                         <input class="form-control" type="text" placeholder="小说|作者<?= $this->categoryName ? '['.$this->categoryName.']' : '[全站]' ?>" name="search_key" value="<?= trim(Yii::$app->request->get('search_key'))?>"/>
                         <div class="input-group-addon"><button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button></div>
                     </div>
                 </div>
             </form>
         </div>
-        <?php } ?>
+        <?php 
+} ?>
         <?= $content ?>
     </div>
 </div>

@@ -7,6 +7,7 @@ use Overtrue\Pinyin\Pinyin;
 use yii\db\ActiveRecord;
 use common\models\Ditch;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%fiction}}".
@@ -21,6 +22,7 @@ use yii\helpers\ArrayHelper;
  * @property string $url
  * @property int $status 1:正常 2:更新失败
  * @property int $views
+ * @property string $imgUrl
  */
 class Fiction extends ActiveRecord
 {
@@ -43,7 +45,7 @@ class Fiction extends ActiveRecord
             [['description'], 'string'],
             [['status', 'views'], 'integer'],
             [['categoryKey', 'ditchKey'], 'string', 'max' => 80],
-            [['fictionKey'], 'string', 'max' => 100],
+            [['fictionKey', 'imgUrl'], 'string', 'max' => 100],
             [['name', 'author', 'url'], 'string', 'max' => 50],
         ];
     }
@@ -64,6 +66,7 @@ class Fiction extends ActiveRecord
             'url' => 'Url',
             'status' => 'Status',
             'views' => '浏览次数',
+            'imgUrl' => '图片地址',
         ];
     }
 
@@ -350,5 +353,22 @@ class Fiction extends ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::class, ['categoryKey' => 'categoryKey']);
+    }
+
+    public function updateImgUrl()
+    {
+        if (!$this->imgUrl && $this->url && 1 === $this->status) {
+            $imgUrl = Gather::getFictionImgUrl(rtrim($this->url));
+            if ($imgUrl) {
+                $ext = substr($imgUrl, strrpos($imgUrl, '.') + 1);
+                if (in_array($ext, ['png', 'jpg', 'jpeg', 'gif'])) {
+                    $this->imgUrl = $imgUrl;
+                    $this->save();
+                }
+            } else {
+                $this->imgUrl = '/images/default.svg';
+                $this->save();
+            }
+        }
     }
 }
