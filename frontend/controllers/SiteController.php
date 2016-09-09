@@ -12,7 +12,7 @@ class SiteController extends BaseController
 {
     public function actionIndex()
     {
-        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->orderBy(['views' => SORT_DESC])->all();
+        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->andWhere(['>', 'views', 0])->orderBy(['views' => SORT_DESC])->all();
         $ids = ArrayHelper::getColumn($ids, 'id');
         $randIds = [];
         $count = count($ids);
@@ -31,7 +31,7 @@ class SiteController extends BaseController
 
     public function actionChange()
     {
-        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->orderBy(['views' => SORT_DESC])->all();
+        $ids = Fiction::find()->select('id')->where('fictionKey IS NOT NULL')->andWhere(['>', 'views', 0])->orderBy(['views' => SORT_DESC])->all();
         $ids = ArrayHelper::getColumn($ids, 'id');
         $randIds = [];
         $count = count($ids);

@@ -362,7 +362,9 @@ class Fiction extends ActiveRecord
             if ($imgUrl) {
                 $ext = substr($imgUrl, strrpos($imgUrl, '.') + 1);
                 if (in_array($ext, ['png', 'jpg', 'jpeg', 'gif'])) {
-                    $this->imgUrl = $imgUrl;
+                    $file = Image::download($imgUrl, $this->id.'.'.$ext);
+                    $host = rtrim(\Yii::$app->params['frontend_host'], '/');
+                    $this->imgUrl =  'http://' . $host . $file;
                     $this->save();
                 }
             } else {

@@ -151,13 +151,17 @@ a.desc:after {
     overflow : hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     font-size: 14px;
     margin-top: 5px;
 }
 
-#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 0 5px;min-height: 194px;}
+#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 0 5px;min-height: 170px;    background: white;}
 #site_body .jumbotron h3{margin: 5px; -o-text-overflow: ellipsis;  text-overflow: ellipsis;  overflow: hidden;  white-space: nowrap;}
 
 #w0 .navbar-header .navbar-toggle{background-color: #cc6600;border: 1px solid white;}
+.clear-both {clear: both;}
+.float-left{float: left;}
+.site_fic_list_right{width: 100%;margin-left: -130px;padding-left: 130px;}
+.site_fic_list_right div{background: #eee;height: 145px;}

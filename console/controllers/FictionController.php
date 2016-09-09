@@ -45,7 +45,7 @@ class FictionController extends Controller
 
     public function actionUpdateImgUrl()
     {
-        $fictions = Fiction::find()->where(['not', ['fictionKey' => null]])->andWhere(['imgUrl' => null])->andWhere(['status' => 1])->limit(50)->all();
+        $fictions = Fiction::find()->where(['not', ['fictionKey' => null]])->andWhere(['imgUrl' => null])->andWhere(['status' => 1])->andWhere(['>', 'views', 0])->limit(10)->orderBy(['views' => SORT_DESC])->all();
         if ($fictions) {
             foreach ($fictions as $fiction) {
                 $fiction->updateImgUrl();
