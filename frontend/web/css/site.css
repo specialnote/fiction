@@ -157,7 +157,7 @@ a.desc:after {
     margin-top: 5px;
 }
 
-#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 15px 5px;min-height: 194px;}
+#site_body .jumbotron {margin-bottom: 15px;padding: 5px 5px 0 5px;min-height: 194px;}
 #site_body .jumbotron h3{margin: 5px; -o-text-overflow: ellipsis;  text-overflow: ellipsis;  overflow: hidden;  white-space: nowrap;}
 
 #w0 .navbar-header .navbar-toggle{background-color: #cc6600;border: 1px solid white;}
