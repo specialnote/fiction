@@ -73,13 +73,15 @@ class FicController extends BaseController
     {
         $fiction = Fiction::findOne($fid);
         if ($fiction) {
-            $fiction->cache($num);
-            if (YII_ENV === 'prod') {
+            $res = $fiction->cache($num);
+            if (YII_ENV === 'prod' && $res) {
                 $data = [['id' => $fid, 'num' => $num]];
                 //向百度推送小说详情章节
                 $urls = Fiction::getDetailUrls($data);
-                LinkPush::push($urls);
+                $result = LinkPush::push($urls);
+                Yii::trace('百度链接提交-地址：'.json_encode($urls).';提交结果：'.$result, 'baidu');
             }
+            return $res;
         }
     }
 

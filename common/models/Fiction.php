@@ -281,15 +281,17 @@ class Fiction extends ActiveRecord
     {
         $key = 'ditch_' . $this->ditchKey . '_fiction_' . $this->id . '_chapter_' . $num;
         $cache = \Yii::$app->cache;
-        $ditch = $this->getDitch();
-        $chapter = (new Chapter())->initChapter($this);
-        $list = $chapter->getChapter($num);
-        if ($cache->exists($key)) {
-            $content = $cache->get($key);
-        } else {
+        $content = $cache->get($key);
+        if (!$content) {
+            $ditch = $this->getDitch();
+            $chapter = (new Chapter())->initChapter($this);
+            $list = $chapter->getChapter($num);
             $content = '';
             if ($list && $list['url']) {
                 $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
+            }
+            if ($content) {
+                $cache->set($key, $content, \Yii::$app->params['fiction_chapter_detail']);
             }
         }
         $content = $content ?: '暂时没有找到指定章节数据';
@@ -308,15 +310,20 @@ class Fiction extends ActiveRecord
     {
         $key = 'ditch_' . $this->ditchKey . '_fiction_' . $this->id . '_chapter_' . $num;
         $cache = \Yii::$app->cache;
-        $ditch = $this->getDitch();
-        $chapter = (new Chapter())->initChapter($this);
-        $list = $chapter->getChapter($num);
-        if ($list && $list['url']) {
-            $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
-            if ($content) {
-                $cache->set($key, $content, 60 * 60 * 24);
+        $content = $cache->get($key);
+        if (!$content) {
+            $ditch = $this->getDitch();
+            $chapter = (new Chapter())->initChapter($this);
+            $list = $chapter->getChapter($num);
+            if ($list && $list['url']) {
+                $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
+                if ($content) {
+                    $res = $cache->set($key, $content, \Yii::$app->params['fiction_chapter_detail']);
+                    return $res;
+                }
             }
         }
+        return false;
     }
 
     //获取所有小说的地址

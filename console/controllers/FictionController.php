@@ -43,6 +43,7 @@ class FictionController extends Controller
         }
     }
 
+    //更新所有小说图片(10个)
     public function actionUpdateImgUrl()
     {
         $fictions = Fiction::find()->where(['not', ['fictionKey' => null]])->andWhere(['imgUrl' => null])->andWhere(['status' => 1])->andWhere(['>', 'views', 0])->limit(10)->orderBy(['views' => SORT_DESC])->all();

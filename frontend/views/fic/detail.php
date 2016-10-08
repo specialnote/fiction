@@ -60,9 +60,6 @@ $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ','
             next.css({'background': '#ccc', 'border': '1px solid #ccc'});
         }
     });
-
-    //缓存当前详情
-    $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num ?>);
     //缓存下一章
     $.get('/fic/cache?fid=<?= $fiction->id ?>&num='+<?= $num + 1 ?>);
 </script>
