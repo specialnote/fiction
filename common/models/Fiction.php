@@ -282,10 +282,10 @@ class Fiction extends ActiveRecord
         $key = 'ditch_' . $this->ditchKey . '_fiction_' . $this->id . '_chapter_' . $num;
         $cache = \Yii::$app->cache;
         $content = $cache->get($key);
+        $chapter = (new Chapter())->initChapter($this);
+        $list = $chapter->getChapter($num);
         if (!$content) {
             $ditch = $this->getDitch();
-            $chapter = (new Chapter())->initChapter($this);
-            $list = $chapter->getChapter($num);
             $content = '';
             if ($list && $list['url']) {
                 $content = Gather::getFictionDetail($list['url'], $ditch->detailRule);
