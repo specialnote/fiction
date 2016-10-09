@@ -33,9 +33,9 @@ class CategoryController extends BaseController
         $categoryKey = trim(\Yii::$app->request->get('category_key', ''));
         if ($key) {
             //查找小说名
-            $query = Fiction::find()->where(['like', 'name', $key]);
+            $query = Fiction::find()->where(['like', 'name', trim($key)]);
             if ($categoryKey) {
-                $query = $query->andWhere(['categoryKey' => $categoryKey]);
+                //$query = $query->andWhere(['categoryKey' => $categoryKey]);
             }
             $pages = new Pagination([
                 'totalCount' => $query->count(),
@@ -48,7 +48,7 @@ class CategoryController extends BaseController
             } else {
                 $query = Fiction::find()->where(['like', 'author', $key]);
                 if ($categoryKey) {
-                    $query = $query->andWhere(['categoryKey' => $categoryKey]);
+                    //$query = $query->andWhere(['categoryKey' => $categoryKey]);
                 }
                 $pages = new Pagination([
                     'totalCount' => $query->count(),
