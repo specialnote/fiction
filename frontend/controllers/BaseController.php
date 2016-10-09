@@ -3,9 +3,11 @@
 namespace frontend\controllers;
 
 use common\models\Ditch;
+use Yii;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class BaseController extends Controller
 {
@@ -42,6 +44,14 @@ class BaseController extends Controller
 
     public function beforeAction($action)
     {
+        $request = Yii::$app->request;
+        if ($request->isAjax) {
+            $headers = Yii::$app->request->headers;
+            $accept = $headers->get('Accept');
+            if ('text/html' !== $accept){
+                Yii::$app->response->format = Response::FORMAT_JSON;
+            }
+        }
         if (parent::beforeAction($action)) {
             $this->view->categoryList = $this->getCategoryList();
             return true;
