@@ -35,3 +35,6 @@ phpunit.phar
 
 #sitemap
 /frontend/web/sitemap_main.xml
+
+#imgs
+/frontend/web/downloads
