@@ -17,10 +17,10 @@ $frontend_host = Yii::$app->params['frontend_host'];
 $fk = $fiction->fictionKey;
 $title = Html::encode($fiction->name);
 $author = Html::encode($fiction->author);
-$this->title = $title . '-' . $author . '-最新章节';
+$this->title = $title . '-' . $author . '-无弹窗小说-无广告小说';
 $this->headline = $title;
 $this->description = $company . '-' . $this->title;
-$this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author;
+$this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ',无弹窗小说,无广告小说';
 ?>
 <div class="row" id="list_header">
     <div class="col-xs-12 col-md-12">
