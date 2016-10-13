@@ -1,6 +1,6 @@
 <?php
 $company = Yii::$app->params['company_name'];
-$this->title = $fiction->name . '-' . $detail['text'];
+$this->title = $fiction->name . '-' . $detail['text'].Yii::$app->params['title'];
 $this->headline = $fiction->name;
 $this->description = $company . '-' . $this->title;
 $this->keywords = $company . ',' . $fiction->name . ',' . $fiction->author . ',' . $detail['text'];
