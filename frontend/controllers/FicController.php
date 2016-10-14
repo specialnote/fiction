@@ -84,6 +84,19 @@ class FicController extends BaseController
             return $res;
         }
     }
+    public function actionTest($fid, $num)
+    {
+        $fiction = Fiction::findOne($fid);
+        if ($fiction) {
+            if (YII_ENV === 'prod') {
+                $data = [['id' => $fid, 'num' => $num]];
+                //向百度推送小说详情章节
+                $urls = Fiction::getDetailUrls($data);
+                $result = LinkPush::push($urls);
+                Yii::trace('百度链接提交-地址：'.json_encode($urls).';提交结果：'.$result, 'baidu');
+            }
+        }
+    }
 
     //ajax获取上一章、下一章
     public function actionPn($fid, $num)
