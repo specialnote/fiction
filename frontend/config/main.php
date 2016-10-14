@@ -25,6 +25,17 @@ return [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['trace'],
+                    'categories' => ['baidu'],
+                    'logFile' => '@app/runtime/baidu/baidu'.date('Ym').'.log',
+                    'maxFileSize' => 1024 * 2,
+                    'logVars' => ['trace'],
+                    'prefix' => function ($message) {
+                        return '';//去掉消息返回的[IP address][User ID][Session ID][Severity Level]
+                    },
+                ],
             ],
         ],
         'errorHandler' => [
