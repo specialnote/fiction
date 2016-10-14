@@ -21,6 +21,9 @@ if (YII_ENV === 'prod') {
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
+    <?php if(YII_ENV === 'prod') { ?>
+        <meta name="baidu-site-verification" content="EDkZ3z5qQK" />
+    <?php }?>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="sogou_site_verification" content="ATC69gwHz1"/>
